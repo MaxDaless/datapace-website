@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>datapace.ai - AI That Tells Devs Exactly What to Fix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #fafbfc 0%, #f1f5f9 100%);
+        }
+
+        .wave-bg {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:%2300d4aa;stop-opacity:0.05"/><stop offset="50%" style="stop-color:%2300bcd4;stop-opacity:0.03"/><stop offset="100%" style="stop-color:%234dd0e1;stop-opacity:0.05"/></linearGradient></defs><path d="M0,400 Q300,200 600,400 T1200,400 L1200,0 L0,0 Z" fill="url(%23waveGrad)"/></svg>') repeat-x;
+            animation: wave 25s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Logo Styles */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a202c;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #00d4aa 0%, #4dd0e1 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 212, 170, 0.2);
+        }
+
+        .logo-waves {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 42"><path d="M6,21 Q16,11 26,21 T42,21" stroke="white" stroke-width="2.5" fill="none" opacity="0.9"/><path d="M6,26 Q16,16 26,26 T42,26" stroke="white" stroke-width="2" fill="none" opacity="0.7"/><path d="M6,16 Q16,6 26,16 T42,16" stroke="white" stroke-width="2" fill="none" opacity="0.7"/></svg>') center/cover;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 24px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #00d4aa;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00d4aa, #4dd0e1);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 160px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+        }
+
+        .hero .tagline {
+            font-size: 1.75rem;
+            color: #00d4aa;
+            font-weight: 700;
+            margin-bottom: 32px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero p {
+            font-size: 1.375rem;
+            color: #64748b;
+            max-width: 680px;
+            margin: 0 auto 48px;
+            line-height: 1.5;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d4aa 0%, #4dd0e1 100%);
+            color: white;
+            padding: 20px 48px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 212, 170, 0.3);
+            letter-spacing: -0.01em;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 212, 170, 0.4);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .beta-text {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 80px;
+            color: #1a202c;
+            letter-spacing: -0.03em;
+        }
+
+        /* Problem Section */
+        .problem {
+            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .problem::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><path d="M0,400 Q300,600 600,400 T1200,400 L1200,800 L0,800 Z" fill="rgba(255,255,255,0.3)"/></svg>') repeat-x;
+            opacity: 0.5;
+        }
+
+        .problem-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .problem h2 {
+            font-size: 3rem;
+            color: #dc2626;
+            margin-bottom: 48px;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .problem-list {
+            list-style: none;
+            display: grid;
+            gap: 32px;
+        }
+
+        .problem-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            padding: 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .problem-list li:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .problem-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .problem-text {
+            flex: 1;
+        }
+
+        .problem-text strong {
+            display: block;
+            font-size: 1.25rem;
+            color: #1a202c;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .problem-text p {
+            color: #64748b;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Solution Section */
+        .solution {
+            background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><path d="M0,400 Q300,200 600,400 T1200,400 L1200,0 L0,0 Z" fill="rgba(255,255,255,0.4)"/></svg>') repeat-x;
+            opacity: 0.7;
+        }
+
+        .solution-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .solution h2 {
+            font-size: 3rem;
+            color: #00d4aa;
+            margin-bottom: 48px;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .feature-grid {
+            display: grid;
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0, 212, 170, 0.15);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #00d4aa, #4dd0e1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 4px 16px rgba(0, 212, 170, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: #1a202c;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.7;
+            font-size: 1.125rem;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            background: linear-gradient(135deg, #eff6ff 0%, #bfdbfe 100%);
+        }
+
+        .benefits h2 {
+            color: #2563eb;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 48px 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(37, 99, 235, 0.15);
+        }
+
+        .benefit-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #2563eb, #4dd0e1);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            font-size: 32px;
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+        }
+
+        .benefit-card h3 {
+            font-size: 1.375rem;
+            color: #1a202c;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .benefit-card p {
+            color: #64748b;
+            font-size: 1.125rem;
+            line-height: 1.6;
+        }
+
+        /* Vision Section */
+        .vision {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vision::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="visionGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:%234dd0e1;stop-opacity:0.1"/><stop offset="100%" style="stop-color:%2300d4aa;stop-opacity:0.05"/></linearGradient></defs><path d="M0,400 Q300,200 600,400 T1200,400 L1200,0 L0,0 Z" fill="url(%23visionGrad)"/></svg>') repeat-x;
+            opacity: 0.6;
+        }
+
+        .vision h2 {
+            color: #4dd0e1;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .vision p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.95;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            background: linear-gradient(135deg, #00d4aa 0%, #4dd0e1 100%);
+            color: white;
+            text-align: center;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><path d="M0,400 Q300,600 600,400 T1200,400 L1200,800 L0,800 Z" fill="rgba(255,255,255,0.1)"/></svg>') repeat-x;
+            opacity: 0.3;
+        }
+
+        .final-cta h2 {
+            font-size: 3rem;
+            margin-bottom: 32px;
+            position: relative;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .final-cta .cta-button {
+            background: rgba(255, 255, 255, 0.95);
+            color: #00d4aa;
+            font-size: 1.25rem;
+            padding: 22px 56px;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .final-cta .cta-button:hover {
+            background: white;
+            transform: translateY(-3px);
+        }
+
+        .final-cta .beta-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 48px;
+            margin-bottom: 32px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: #4dd0e1;
+        }
+
+        .footer-copyright {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .problem h2,
+            .solution h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .hero {
+                padding: 80px 0 120px;
+            }
+            
+            .hero h1 {
+                font-size: 2.75rem;
+            }
+
+            .hero .tagline {
+                font-size: 1.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.25rem;
+            }
+
+            .section {
+                padding: 80px 0;
+            }
+
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 60px;
+            }
+
+            .problem h2,
+            .solution h2 {
+                font-size: 2rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .final-cta h2 {
+                font-size: 2.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+            
+            .hero .tagline {
+                font-size: 1.25rem;
+            }
+            
+            .cta-button {
+                padding: 18px 40px;
+                font-size: 1rem;
+            }
+            
+            .problem-list li,
+            .feature-card {
+                padding: 24px;
+            }
+            
+            .benefit-card {
+                padding: 32px 24px;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Smooth hover transitions */
+        * {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="wave-bg"></div>
+    </div>
+
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <div class="logo-waves"></div>
+                    </div>
+                    <span>datapace.ai</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#problem">Problem</a>
+                    <a href="#solution">Solution</a>
+                    <a href="#benefits">Benefits</a>
+                    <a href="#vision">Vision</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="tagline">AI That Tells Devs Exactly What to Fix</div>
+            <h1>Transform your Database Performance</h1>
+            <p>Stop wasting hours debugging slow databases. Get precise diagnostics and actionable recommendations to keep your applications running at peak performance.</p>
+            <a href="#" class="cta-button">Join the withing list</a>
+            <div class="beta-text">Limited spots available. Be among the first to transform your database performance.</div>
+        </div>
+    </section>
+
+    <section id="problem" class="section problem">
+        <div class="container">
+            <div class="problem-content">
+                <h2>Is Your Database Holding You Back?</h2>
+                <ul class="problem-list">
+                    <li class="fade-in">
+                        <div class="problem-icon">⚠</div>
+                        <div class="problem-text">
+                            <strong>Lost hours debugging complex database bottlenecks</strong>
+                            <p>Endless troubleshooting sessions that could be spent building features</p>
+                        </div>
+                    </li>
+                    <li class="fade-in">
+                        <div class="problem-icon">🔍</div>
+                        <div class="problem-text">
+                            <strong>Lack of dedicated DBA expertise for critical optimizations</strong>
+                            <p>Complex performance issues require specialized knowledge most teams don't have</p>
+                        </div>
+                    </li>
+                    <li class="fade-in">
+                        <div class="problem-icon">📉</div>
+                        <div class="problem-text">
+                            <strong>Direct impact on your team's productivity and user experience</strong>
+                            <p>Slow databases mean frustrated users and delayed deployments</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="solution" class="section solution">
+        <div class="container">
+            <div class="solution-content">
+                <h2>Meet datapace.ai: Intelligent Optimization</h2>
+                <div class="feature-grid">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Precise, Reactive Diagnostics</h3>
+                        <p>Our AI instantly identifies the root causes of performance issues, saving you hours of manual investigation.</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">✅</div>
+                        <h3>Actionable Recommendations</h3>
+                        <p>Get clear, concrete instructions to fix problems, without needing deep database expertise.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="benefits" class="section benefits">
+        <div class="container">
+            <h2 class="section-title">Why datapace.ai?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Massive Time Savings</h3>
+                    <p>Focus on coding, not on DB debugging</p>
+                </div>
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">🚀</div>
+                    <h3>Peak Performance</h3>
+                    <p>Your applications run at their optimal potential</p>
+                </div>
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">💪</div>
+                    <h3>Developer Empowerment</h3>
+                    <p>DBA-level insights, accessible to everyone</p>
+                </div>
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">🤖</div>
+                    <h3>AI-Powered Intelligence</h3>
+                    <p>Smart analysis that improves with every data point</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="vision" class="section vision">
+        <div class="container">
+            <h2>Our Ultimate Vision</h2>
+            <p>We're building the Database Performance Operating System: autonomous and predictive optimizations for a future free of slowdowns.</p>
+        </div>
+    </section>
+
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Transform Your Database Performance?</h2>
+            <a href="#" class="cta-button">Sign Up for Private Beta</a>
+            <div class="beta-text">Discover how AI can accelerate your projects.</div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <div class="logo-waves"></div>
+                    </div>
+                    <span>datapace.ai</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                © 2025 datapace.ai. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -60px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add parallax effect to hero background
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrolled = window.pageYOffset;
+                    const parallax = document.querySelector('.wave-bg');
