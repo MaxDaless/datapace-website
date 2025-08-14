@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <!-- Primary Meta Tags -->
+    <title>Blog - Datapace.ai | Database Performance Insights and Best Practices</title>
+    <meta name="title" content="Blog - Datapace.ai | Database Performance Insights">
+    <meta name="description" content="Discover expert insights on database optimization, performance tuning, and AI-driven solutions. Learn best practices from database professionals and stay updated with the latest trends.">
+    <meta name="keywords" content="database blog, performance optimization, database best practices, SQL optimization, database tutorials, AI database tools">
+    <meta name="author" content="Datapace">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://datapace.ai/blog">
+    <meta property="og:title" content="Blog - Datapace.ai | Database Performance Insights">
+    <meta property="og:description" content="Discover expert insights on database optimization, performance tuning, and AI-driven solutions.">
+    <meta property="og:image" content="https://datapace.ai/assets/blog-og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://datapace.ai/blog">
+    <meta property="twitter:title" content="Blog - Datapace.ai | Database Performance Insights">
+    <meta property="twitter:description" content="Discover expert insights on database optimization, performance tuning, and AI-driven solutions.">
+    <meta property="twitter:image" content="https://datapace.ai/assets/blog-og-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="blog.css">
+    
+    <!-- Schema.org markup for blog -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "Datapace Blog",
+      "description": "Expert insights on database optimization, performance tuning, and AI-driven solutions.",
+      "url": "https://datapace.ai/blog",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Datapace",
+        "url": "https://datapace.ai",
+        "logo": "https://datapace.ai/assets/logo.png"
+      }
+    }
+    </script>
+</head>
+<body>
+    <nav>
+        <div class="container nav-content">
+            <a href="index.html" class="logo" aria-label="datapace.ai Homepage">
+                <img src="assets/logo.png" alt="Datapace Wave Logo" width="40" height="40">
+                <span class="logo-text">datapace</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="cta-button secondary">← Back to Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Blog Hero Section -->
+        <section class="blog-hero">
+            <div class="container">
+                <div class="blog-hero-content">
+                    <span class="tagline">Insights & Knowledge</span>
+                    <h1>Database Performance Blog</h1>
+                    <p>Expert insights, best practices, and the latest trends in database optimization and AI-driven performance solutions.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hidden Admin Controls (password protected) -->
+        <section class="admin-section" id="admin-section" style="display: none;">
+            <div class="container">
+                <div id="admin-controls" class="admin-panel">
+                    <div class="admin-header">
+                        <h3>📝 Blog Management</h3>
+                        <button id="logout-admin" class="cta-button secondary">Logout</button>
+                    </div>
+                    <div class="admin-actions">
+                        <button id="create-article" class="cta-button">✍️ Create New Article</button>
+                        <button id="import-articles" class="cta-button secondary">📥 Load Sample Articles</button>
+                        <button id="export-articles" class="cta-button secondary">📤 Export Articles</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Article -->
+        <section class="featured-article section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="tagline">Featured Article</span>
+                    <h2>Latest Insights</h2>
+                </div>
+                <div id="featured-article" class="featured-article-card">
+                    <!-- Featured article will be loaded here dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Articles Grid -->
+        <section class="blog-articles section">
+            <div class="container">
+                <div class="blog-header">
+                    <h2>All Articles</h2>
+                    <div class="blog-filters">
+                        <button class="filter-btn active" data-category="all">All</button>
+                        <button class="filter-btn" data-category="optimization">Optimization</button>
+                        <button class="filter-btn" data-category="tutorials">Tutorials</button>
+                        <button class="filter-btn" data-category="ai">AI & ML</button>
+                        <button class="filter-btn" data-category="case-studies">Case Studies</button>
+                    </div>
+                </div>
+                <div id="articles-grid" class="articles-grid">
+                    <!-- Articles will be loaded here dynamically -->
+                </div>
+                <div class="load-more-container">
+                    <button id="load-more" class="cta-button secondary">Load More Articles</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Signup -->
+        <section class="newsletter-signup section">
+            <div class="container">
+                <div class="newsletter-content">
+                    <h2>Stay Updated</h2>
+                    <p>Get the latest database performance insights delivered to your inbox.</p>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="Enter your email" id="newsletter-email" required>
+                        <button type="submit" class="cta-button" id="newsletter-submit">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about footer-col">
+                    <a href="index.html" class="logo" aria-label="datapace.ai Homepage">
+                        <img src="assets/logo.png" alt="Datapace Wave Logo" width="40" height="40">
+                        <span class="logo-text">datapace</span>
+                    </a>
+                    <p>The AI-powered operating system for database performance.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html#solution">How It works</a></li>
+                        <li><a href="index.html#for-devs">Who It's for</a></li>
+                        <li><a href="index.html#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    &copy; 2025 datapace.ai. All rights reserved.
+                    <span class="admin-link" onclick="blogManager.showAdminLogin()" style="cursor: pointer; margin-left: 20px; opacity: 0.1; user-select: none;">•</span>
+                </div>
+                <div class="footer-socials">
+                    <a href="https://www.linkedin.com/company/datapaceai/" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                            <rect width="4" height="12" x="2" y="9"/>
+                            <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.instagram.com/datapace_/" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="article-modal" style="display: none;">
+        <div class="article-modal-overlay"></div>
+        <div class="article-modal-content" style="max-width: 400px;">
+            <button class="article-modal-close" onclick="document.getElementById('admin-login-modal').style.display='none'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="article-modal-header">
+                <h2>Admin Login</h2>
+                <p style="font-size: var(--text-sm); color: var(--light-text); margin-top: var(--space-sm);">Enter admin credentials to manage blog content</p>
+            </div>
+            <form id="admin-login-form" class="article-form">
+                <div class="form-group">
+                    <label for="admin-username">Username</label>
+                    <input type="text" id="admin-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin-password">Password</label>
+                    <input type="password" id="admin-password" name="password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cta-button secondary" onclick="document.getElementById('admin-login-modal').style.display='none'">Cancel</button>
+                    <button type="submit" class="cta-button">🔐 Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Article Creation Modal -->
+    <div id="article-modal" class="article-modal" style="display: none;">
+        <div class="article-modal-overlay"></div>
+        <div class="article-modal-content">
+            <button class="article-modal-close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="article-modal-header">
+                <h2 id="modal-title">Create New Article</h2>
+            </div>
+            <form id="article-form" class="article-form">
+                <div class="form-group">
+                    <label for="article-title">Title</label>
+                    <input type="text" id="article-title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="article-excerpt">Excerpt</label>
+                    <textarea id="article-excerpt" name="excerpt" rows="3" required placeholder="Brief description of the article..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="article-category">Category</label>
+                    <select id="article-category" name="category" required>
+                        <option value="optimization">Optimization</option>
+                        <option value="tutorials">Tutorials</option>
+                        <option value="ai">AI & ML</option>
+                        <option value="case-studies">Case Studies</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="article-author">Author</label>
+                    <input type="text" id="article-author" name="author" value="Datapace Team" required>
+                </div>
+                <div class="form-group">
+                    <label for="article-read-time">Read Time (minutes)</label>
+                    <input type="number" id="article-read-time" name="readTime" value="5" min="1" max="60" required>
+                </div>
+                <div class="form-group">
+                    <label for="article-content">Content (Markdown supported)</label>
+                    <textarea id="article-content" name="content" rows="12" required placeholder="Write your article content here... You can use markdown formatting."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="article-featured">
+                        <input type="checkbox" id="article-featured" name="featured">
+                        Mark as featured article
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cta-button secondary" onclick="closeArticleModal()">Cancel</button>
+                    <button type="submit" class="cta-button">💾 Save Article</button>
+                    <button type="button" id="delete-article" class="cta-button" style="background: #dc2626; display: none;">🗑️ Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Blog JavaScript -->
+    <script src="blog.js"></script>
+    <script src="blog-manager.js"></script>
+</body>
+</html>
