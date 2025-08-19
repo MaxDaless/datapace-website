@@ -2230,6 +2230,20 @@ footer { background: var(--bg-dark); color: white; padding: 80px 0 40px 0; font-
         color: var(--dark-text) !important; /* Better contrast on mobile */
     }
     
+    /* Fix contrast for features section title on mobile */
+    #features .section-header .section-title {
+        color: var(--dark-text) !important; /* Better contrast on mobile */
+    }
+    
+    /* Fix contrast for testimonials section on mobile */
+    #testimonial .section-header .section-title,
+    #testimonial .section-header .section-subtitle,
+    #testimonial .testimonial-quote,
+    #testimonial .author-info strong,
+    #testimonial .author-info span {
+        color: var(--dark-text) !important; /* Better contrast on mobile */
+    }
+    
     /* Mobile footer */
     .footer-grid {
         grid-template-columns: 1fr;
