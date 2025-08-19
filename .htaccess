@@ -1,0 +1,14 @@
+DirectoryIndex index.html
+
+# Enable directory indexes for blog folder
+Options +Indexes
+
+# Set default index file for directories
+<IfModule mod_dir.c>
+    DirectoryIndex index.html index.htm
+</IfModule>
+
+# Force HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

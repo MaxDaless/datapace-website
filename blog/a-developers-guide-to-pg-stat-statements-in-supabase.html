@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0HRD8ZJ8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-BT0HRD8ZJ8');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stop Guessing, Start Measuring: A Developer's Guide to pg_stat_statements in Supabase - Datapace Blog</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../assets/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <a href="../index.html" class="logo" aria-label="datapace.ai Homepage">
+                    <img src="../assets/logo.png" alt="Datapace Wave Logo">
+                    <span class="logo-text">datapace</span>
+                </a>
+                <div class="nav-links">
+                    <a href="../index.html#features">Features</a>
+                    <a href="../index.html#how-it-works">How It Works</a>
+                    <a href="../index.html#pricing">Pricing</a>
+                    <a href="../index.html#faq">FAQ</a>
+                    <a href="index.html">Blog</a>
+                </div>
+                <div class="nav-ctas">
+                    <a href="https://app.datapace.ai" class="cta-button">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="article-main">
+        <div class="article-content">
+            <a href="index.html" class="back-to-blog">← Back to Blog</a>
+            
+            <article class="article-header">
+                <h1 class="article-title">Stop Guessing, Start Measuring: A Developer's Guide to pg_stat_statements in Supabase</h1>
+                <div class="article-meta">
+                    <span class="blog-category">Monitoring</span>
+                    <span class="blog-read-time">7 min read</span>
+                </div>
+            </article>
+            
+            <div class="article-body">
+                <p>In our last guide, we showed you how to fix the five most common SQL mistakes using <code>EXPLAIN ANALYZE</code>. It's the perfect microscope for inspecting a single, slow query.</p>
+
+                <p>But in a real-world application, you have hundreds of queries. How do you find the one that's doing the most damage? You could wait for users to complain, but that's like waiting for the smoke alarm to go off to start cooking.</p>
+
+                <p>There's a better way. This guide will introduce you to <code>pg_stat_statements</code>, the most important performance monitoring tool in PostgreSQL. We'll show you how to use it to stop guessing and start making data-driven optimizations.</p>
+
+                <blockquote>
+                    <p><strong>TL;DR:</strong></p>
+                    <ol>
+                        <li>Enable the <code>pg_stat_statements</code> extension in your Supabase dashboard.</li>
+                        <li>Use our SQL queries to find your most expensive queries by "Total Pain" (<code>total_exec_time</code>) and average latency (<code>mean_exec_time</code>).</li>
+                        <li>Combine this with <code>EXPLAIN ANALYZE</code> to create a complete, repeatable optimization workflow.</li>
+                    </ol>
+                </blockquote>
+
+                <hr>
+
+                <h2>What is pg_stat_statements? 🕵️</h2>
+
+                <p><code>pg_stat_statements</code> is an official PostgreSQL extension that acts like a profiler for your database. It tracks execution statistics for every query, aggregates them, and gives you a single view to find your worst offenders.</p>
+
+                <p>Think of it like a <strong>call summary for your database</strong>. It tells you:</p>
+
+                <ul>
+                    <li><strong>Which queries run most often</strong> (total calls).</li>
+                    <li><strong>Which queries consume the most cumulative time</strong> (your application's <strong>"Total Pain"</strong>).</li>
+                    <li><strong>Which queries are slowest on average</strong> (your application's average latency).</li>
+                </ul>
+
+                <hr>
+
+                <h2>Step 1: Enabling pg_stat_statements in Supabase</h2>
+
+                <p>First, you need to switch it on. Supabase makes this a one-click process.</p>
+
+                <ol>
+                    <li>Navigate to your project's <strong>Dashboard</strong>.</li>
+                    <li>Go to the <strong>Database</strong> section.</li>
+                    <li>Click on <strong>Extensions</strong>.</li>
+                    <li>Search for <code>pg_stat_statements</code> and click the toggle to <strong>enable it</strong>.</li>
+                </ol>
+
+                <p>That's it! The extension will now start collecting data. Let your application run for at least an hour to gather meaningful statistics before you move on to the next step.</p>
+
+                <hr>
+
+                <h2>Step 2: Finding Your Worst Offenders 📈</h2>
+
+                <p>You can now query the <code>pg_stat_statements</code> view from the Supabase SQL Editor. Here are the two most important queries you'll need.</p>
+
+                <h3>Query #1: The "Death by a Thousand Cuts" Finder (Highest Total Pain)</h3>
+
+                <p>This query finds the queries that are the biggest overall drain on your database. These are often individually fast queries that run thousands of times, making them your top priority.</p>
+
+                <pre><code class="language-sql">SELECT
+  -- Human-readable total time
+  (total_exec_time / 1000 / 60) as total_minutes,
+  -- Average time in milliseconds
+  mean_exec_time as avg_ms,
+  calls,
+  query
+FROM
+  pg_stat_statements
+ORDER BY
+  total_exec_time DESC
+LIMIT 10;</code></pre>
+
+                <p><strong>How to read the results:</strong> Look for queries with a high <code>total_minutes</code>. Even if <code>avg_ms</code> is low, a high number of <code>calls</code> can make it your #1 problem. These are your top optimization targets.</p>
+
+                <h3>Query #2: The "Frustration Finder" (Highest Average Latency)</h3>
+
+                <p>This query finds the slowest individual queries. These are likely causing noticeable delays on specific pages or API endpoints.</p>
+
+                <pre><code class="language-sql">SELECT
+  mean_exec_time as avg_ms,
+  calls,
+  query
+FROM
+  pg_stat_statements
+ORDER BY
+  mean_exec_time DESC
+LIMIT 10;</code></pre>
+
+                <p><strong>How to read the results:</strong> Any query with an <code>avg_ms</code> in the hundreds or thousands is a major red flag that likely points to a missing index or a complex, unoptimized <code>JOIN</code>.</p>
+
+                <hr>
+
+                <h2>Step 3: Your Complete Optimization Workflow</h2>
+
+                <p>This is how you turn insight into action.</p>
+
+                <ol>
+                    <li><strong>Discover:</strong> Run the "Total Pain" query to find your most resource-intensive query.</li>
+                    <li><strong>Diagnose:</strong> Paste that query into a new tab and run <code>EXPLAIN ANALYZE</code> on it.</li>
+                    <li><strong>Fix:</strong> Analyze the plan for red flags like a <code>"Seq Scan"</code> and apply the right fix (usually <code>CREATE INDEX</code>).</li>
+                    <li><strong>Verify:</strong> After applying the fix, reset the stats by running <code>SELECT pg_stat_statements_reset();</code>. Wait a while, then re-run the "Total Pain" query. Your optimized query should have disappeared from the top of the list.</li>
+                </ol>
+
+                <hr>
+
+                <h2>The Path to Automation 🚀</h2>
+
+                <p>This manual workflow is incredibly powerful, but it's also <strong>reactive</strong>. You have to remember to perform these checks, and by the time a query hits the "Total Pain" list, it may have already impacted your users or your cloud bill.</p>
+
+                <p>This is the exact challenge we built Datapace to solve.</p>
+
+                <p>The process you just learned—identifying high-load queries with statistics and then diagnosing them with an execution plan—is precisely what Datapace <strong>automates and does continuously</strong>. Instead of you having to manually run queries, Datapace monitors <code>pg_stat_statements</code> and other signals for you, automatically identifies the most critical performance drains, and provides the recommended fix before it becomes a major problem.</p>
+
+                <hr>
+
+                <h2>Conclusion</h2>
+
+                <p>Guesswork is the enemy of performance. By using <code>pg_stat_statements</code> to <strong>identify what is slow</strong> and <code>EXPLAIN ANALYZE</code> to <strong>understand why it's slow</strong>, you adopt a data-driven approach that is essential for scaling an application.</p>
+
+                <p>Enabling this extension moves you from a reactive firefighter to a proactive performance engineer. It's one of the most impactful habits you can build for the long-term health of your Supabase application and is the foundation for a truly scalable and efficient system.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="../assets/logo.png" alt="Datapace Logo" class="footer-logo">
+                <span class="footer-brand-text">Datapace</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html">Home</a>
+                <a href="index.html">Blog</a>
+                <a href="https://app.datapace.ai">Get Started</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

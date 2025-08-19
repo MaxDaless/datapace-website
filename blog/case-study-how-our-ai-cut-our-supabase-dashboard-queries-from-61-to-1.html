@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0HRD8ZJ8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-BT0HRD8ZJ8');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: How Our AI Cut Our Supabase Dashboard Queries from 61 to 1 - Datapace Blog</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../assets/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <a href="../index.html" class="logo" aria-label="datapace.ai Homepage">
+                    <img src="../assets/logo.png" alt="Datapace Wave Logo">
+                    <span class="logo-text">datapace</span>
+                </a>
+                <div class="nav-links">
+                    <a href="../index.html#features">Features</a>
+                    <a href="../index.html#how-it-works">How It Works</a>
+                    <a href="../index.html#pricing">Pricing</a>
+                    <a href="../index.html#faq">FAQ</a>
+                    <a href="index.html">Blog</a>
+                </div>
+                <div class="nav-ctas">
+                    <a href="https://app.datapace.ai" class="cta-button">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="article-main">
+        <div class="article-content">
+            <a href="index.html" class="back-to-blog">← Back to Blog</a>
+            
+            <article class="article-header">
+                <h1 class="article-title">Case Study: How Our AI Cut Our Supabase Dashboard Queries from 61 to 1</h1>
+                <div class="article-meta">
+                    <span class="blog-category">Case Study</span>
+                    <span class="blog-read-time">6 min read</span>
+                </div>
+            </article>
+            
+            <div class="article-body">
+                <p>Sometimes, the most dangerous performance problems aren't the ones you can see.</p>
+
+                <p>It wasn't a crash or a major outage. It was a slow, creeping decline in our user dashboard's performance. At Datapace, we're not just building a performance tool; we're using it every day to optimize our own applications. And recently, our own AI had to save us from ourselves.</p>
+
+                <p>We knew the problem was the database, but our manual checks were mystifying. <code>EXPLAIN ANALYZE</code> on individual queries showed they were all reasonably fast. There was no single "slow query" to blame. This is the story of how our AI diagnosed a severe N+1 query storm and, with a single recommendation, cut the dashboard's query load by over 98%.</p>
+
+                <blockquote>
+                    <p><strong>TL;DR:</strong></p>
+                    <ol>
+                        <li><strong>The Problem:</strong> Our user dashboard was making <strong>61 separate database queries</strong> to load a list of 20 projects, causing severe performance issues that were invisible to standard query analysis.</li>
+                        <li><strong>The Diagnosis:</strong> The Datapace AI analyzed the application's query traffic and automatically identified the N+1 anti-pattern, pinpointing the cascade of redundant queries.</li>
+                        <li><strong>The Fix:</strong> We implemented the AI's recommended SQL function, which used <code>JOINs</code> and a <code>LATERAL</code> subquery to gather all required data in a <strong>single query</strong>.</li>
+                        <li><strong>The Result:</strong> Page load time dropped from <strong>2.8 seconds to 150 milliseconds</strong>, and database CPU usage fell by 40%.</li>
+                    </ol>
+                </blockquote>
+
+                <hr>
+
+                <h2>The "Before": A Death by 61 Database Trips</h2>
+
+                <p>The dashboard was designed to show a list of projects with their name, the most recent task, the project owner, and a count of active members.</p>
+
+                <p>Frustrated by manual checks, we let the Datapace AI analyze the application's query traffic. It surfaced the root cause in under an hour:</p>
+
+                <p>Here's what was happening every time a user loaded their dashboard with 20 projects:</p>
+
+                <h4>The "1" Query:</h4>
+
+                <p>A single query to fetch the user's 20 projects.</p>
+
+                <pre><code class="language-javascript">const { data: projects } = await supabase
+  .from('projects')
+  .select('*')
+  .eq('user_id', userId);</code></pre>
+
+                <h4>The "N" Queries:</h4>
+
+                <p>Then, for <strong>each</strong> of those 20 projects, our code made <strong>three more queries</strong> inside a loop:</p>
+
+                <ol>
+                    <li>One query to get the latest task.</li>
+                    <li>One query to get the project owner's name.</li>
+                    <li>One query to count the active members.</li>
+                </ol>
+
+                <p>The math was brutal: <strong>1 + (20 Projects × 3 Queries/Project) = 61 Queries.</strong></p>
+
+                <p>Our app was slow because it was making 61 separate round trips to the database to render a single page. This cascade was invisible to basic monitoring but was the undeniable source of our performance issues.</p>
+
+                <hr>
+
+                <h2>The "After": The AI's Recommendation</h2>
+
+                <p>The Datapace AI didn't just identify the problem; it provided the solution. It generated an optimized SQL query for a Supabase RPC function that could gather all the data in one efficient trip.</p>
+
+                <p>The recommendation used <code>JOINs</code> to fetch the owner's name and a <code>LATERAL</code> subquery—a powerful Postgres feature perfect for "get the top-N-per-group" problems like finding the most recent task for each project.</p>
+
+                <h4>The AI-Recommended SQL:</h4>
+
+                <pre><code class="language-sql">-- This function gets all required data in one query
+SELECT
+  p.id,
+  p.name,
+  u.full_name as owner_name,
+  tasks.task_name as latest_task,
+  (SELECT COUNT(m.id) FROM members m WHERE m.project_id = p.id) as active_members
+FROM
+  projects p
+JOIN
+  users u ON p.owner_id = u.id
+LEFT JOIN LATERAL (
+  SELECT t.name as task_name
+  FROM tasks t
+  WHERE t.project_id = p.id
+  ORDER BY t.created_at DESC
+  LIMIT 1
+) tasks ON true
+WHERE
+  p.user_id = 'some-user-id';</code></pre>
+
+                <p>Our team implemented this in a Supabase function and replaced the 61 queries with a single RPC call.</p>
+
+                <pre><code class="language-javascript">// One query to rule them all
+const { data: dashboardData } = await supabase
+  .rpc('get_dashboard_projects');</code></pre>
+
+                <hr>
+
+                <h2>The Results: A 60x Improvement 🚀</h2>
+
+                <p>The impact was immediate and dramatic.</p>
+
+                <ul>
+                    <li><strong>Query Count:</strong> Dropped from <strong>61 to 1</strong> per dashboard load.</li>
+                    <li><strong>Page Load Time:</strong> Decreased from <strong>2.8 seconds to 150 milliseconds</strong>.</li>
+                    <li><strong>Database CPU:</strong> Average utilization during peak hours was <strong>reduced by 40%</strong>, allowing us to downgrade our instance for significant cost savings.</li>
+                </ul>
+
+                <hr>
+
+                <h2>Conclusion: Seeing the Forest for the Trees</h2>
+
+                <p>The most dangerous performance issues aren't always in a single slow query; they often hide in the patterns <em>between</em> your application code and your database. A human developer using <code>EXPLAIN ANALYZE</code> on any of the 61 individual queries would have seen a "fast" result, completely missing the larger storm of inefficiency.</p>
+
+                <p>This is where AI-driven observability shines. It can analyze thousands of queries in context, identify wasteful application-level patterns like the N+1 problem, and provide a holistic, actionable solution. By automating this deep analysis, we were able to find and fix a problem that was slowing down our app, frustrating our users, and quietly draining our resources.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="../assets/logo.png" alt="Datapace Logo" class="footer-logo">
+                <span class="footer-brand-text">Datapace</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html">Home</a>
+                <a href="index.html">Blog</a>
+                <a href="https://app.datapace.ai">Get Started</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

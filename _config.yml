@@ -1,0 +1,35 @@
+# GitHub Pages configuration for datapace.ai
+title: "Datapace.ai - AI Co-pilot for Database Performance"
+description: "AI co-pilot that helps developers improve performance and cut cloud costs"
+url: "https://datapace.ai"
+baseurl: ""
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+
+# Plugins
+plugins:
+  - jekyll-sitemap
+  - jekyll-feed
+
+# Include/Exclude files
+include:
+  - _pages
+  - blog
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+
+# Default layouts
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"

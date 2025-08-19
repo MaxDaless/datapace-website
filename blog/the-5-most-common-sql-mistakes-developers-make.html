@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0HRD8ZJ8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-BT0HRD8ZJ8');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is your Supabase app slowing down? The 5 most common SQL mistakes developers make - Datapace Blog</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../assets/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <a href="../index.html" class="logo" aria-label="datapace.ai Homepage">
+                    <img src="../assets/logo.png" alt="Datapace Wave Logo">
+                    <span class="logo-text">datapace</span>
+                </a>
+                <div class="nav-links">
+                    <a href="../index.html#features">Features</a>
+                    <a href="../index.html#how-it-works">How It Works</a>
+                    <a href="../index.html#pricing">Pricing</a>
+                    <a href="../index.html#faq">FAQ</a>
+                    <a href="index.html">Blog</a>
+                </div>
+                <div class="nav-ctas">
+                    <a href="https://app.datapace.ai" class="cta-button">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="article-main">
+        <div class="article-content">
+            <a href="index.html" class="back-to-blog">← Back to Blog</a>
+            
+            <article class="article-header">
+                <h1 class="article-title">Is your Supabase app slowing down? The 5 most common SQL mistakes developers make</h1>
+                <div class="article-meta">
+                    <span class="blog-category">Best Practices</span>
+                    <span class="blog-read-time">12 min read</span>
+                </div>
+            </article>
+            
+            <div class="article-body">
+                <p>You chose Supabase for a reason: it's an incredible platform that lets you build and ship applications at lightning speed. Your app was flying at first. You were querying data, setting up auth, and building features in record time. But now, a few months later, something has changed. Pages that used to load instantly are taking seconds. Your dashboard feels sluggish. Your users are starting to notice.</p>
+
+                <p>If this sounds familiar, you're not alone. Supabase is built on the rock-solid foundation of PostgreSQL, a database powerful enough to handle massive scale. But with great power comes the need for a little bit of know-how. Most performance problems aren't Supabase's fault; they're the result of a few common and easily fixable SQL patterns that sneak into an application as it grows.</p>
+
+                <p>This guide is for the developer who is a master of their front-end framework but not a database administrator (DBA). We'll break down the five most common SQL mistakes that are likely slowing down your app and show you exactly how to fix them.</p>
+
+                <h2>Mistake #1: Forgetting to Add Indexes</h2>
+
+                <p>This is, <strong>without a doubt</strong>, the number one cause of slow queries in any PostgreSQL database.</p>
+
+                <h3>What it is</h3>
+
+                <p>When you create a table, Supabase doesn't automatically create indexes on every column. An index is a special data structure that allows the database to find rows that match a <code>WHERE</code> clause extremely quickly.</p>
+
+                <h3>Why it's a problem</h3>
+
+                <p>Without an index, PostgreSQL is forced to perform a "full table scan.". This is like being asked to find a single sentence in a book by reading every single page from front to back. It works for a short book (a small table), but it becomes painfully slow for a large one.</p>
+
+                <h3>The Fix</h3>
+
+                <p>Identify the columns you frequently use for filtering in your <code>WHERE</code> clauses (like <code>user_id</code>, <code>status</code>, or <code>email</code>) and add an index to them. Indexing your foreign key columns is almost always the first and most important place to start. You can do this easily in the Supabase SQL Editor.</p>
+
+                <pre><code class="language-sql">-- Your query is slow:
+SELECT * FROM orders WHERE user_id = 'some-user-id';
+
+-- The Fix: Add an index to the user_id column.
+CREATE INDEX idx_orders_user_id ON orders (user_id);</code></pre>
+
+                <p>After adding the index, the database can use it like a book's index, instantly jumping to the right "page" without scanning the whole table. This type of missing index is exactly what Datapace is designed to detect and flag automatically, saving you the manual diagnostic time.</p>
+
+                <blockquote>
+                    <p>A quick pro-tip: while indexes make reads much faster, they add a small overhead to every write (INSERT, UPDATE). This is why you should only index the columns you actively filter on.</p>
+                </blockquote>
+
+                <h2>Mistake #2: Over-fetching Data with select *</h2>
+
+                <p>It's tempting to just grab everything, but it comes at a cost.</p>
+
+                <h3>What it is</h3>
+
+                <p>Using <code>select *</code> to retrieve every column from a table when you only need a few of them.</p>
+
+                <h3>Why it's a problem</h3>
+
+                <p>Fetching unnecessary data consumes more database resources and increases the amount of data sent over the network. If your <code>posts</code> table has a large <code>content</code> column but you only need the <code>id</code> and <code>title</code> for a list view, you're still forcing the database to read and send that large content block for every row.</p>
+
+                <h3>The Fix</h3>
+
+                <p>Be specific. Always list the exact columns you need for that particular query.</p>
+
+                <pre><code class="language-sql">-- Don't do this if you only need the title:
+SELECT * FROM posts;
+
+-- Do this instead:
+SELECT id, title, created_at FROM posts;</code></pre>
+
+                <h2>Mistake #3: The N+1 Query Problem</h2>
+
+                <p>This is a subtle but deadly performance killer, especially when fetching related data.</p>
+
+                <h3>What it is</h3>
+
+                <p>You execute one query to get a list of items (the "1" query), and then you loop through those items and execute a separate query for each one to get related data (the "N" queries).</p>
+
+                <h3>Why it's a problem</h3>
+
+                <p>One hundred network round trips to the database will always be slower than one. If you fetch 50 posts and then make 50 more queries to fetch the author of each post, you've just created 51 separate database requests.</p>
+
+                <h3>The Fix</h3>
+
+                <p>Fetch all the data you need in a single query. The Supabase client offers a convenient way to fetch related data:</p>
+
+                <pre><code class="language-javascript">// A convenient way using the Supabase client
+const { data, error } = await supabase
+  .from('posts')
+  .select(`
+    id,
+    title,
+    users ( name )
+  `);</code></pre>
+
+                <p>While this is much better than a manual loop, be aware that for complex cases, it can still be less performant than a handcrafted SQL <code>JOIN</code>. For maximum performance, especially in critical API endpoints, a dedicated database function (RPC) remains the best tool:</p>
+
+                <pre><code class="language-sql">-- The most performant fix: A single RPC call with a JOIN
+SELECT
+  p.id,
+  p.title,
+  u.name as author_name
+FROM
+  posts p
+JOIN
+  users u ON p.author_id = u.id;</code></pre>
+
+                <h2>Mistake #4: Ignoring Row Level Security (RLS) Performance</h2>
+
+                <p>RLS is one of Supabase's superpowers, but your security policies are code that runs on every query.</p>
+
+                <h3>What it is</h3>
+
+                <p>Writing a complex or slow function inside an RLS policy.</p>
+
+                <h3>Why it's a problem</h3>
+
+                <p>Your RLS policy is attached to your query's <code>WHERE</code> clause. If the function in your policy is slow, every single query against that table will be slow. For example, if your policy calls another function or performs a complex subquery, that overhead is added to every operation.</p>
+
+                <h3>The Fix</h3>
+
+                <p>Keep your RLS policies as simple and fast as possible. Prefer simple checks, and if you need to do a subquery, make sure the columns you're checking are indexed.</p>
+
+                <pre><code class="language-sql">-- A potentially slow RLS policy with a subquery:
+CREATE POLICY "Allow users to see their own organization's posts"
+ON posts
+FOR SELECT USING (
+  EXISTS (
+    SELECT 1 FROM memberships
+    WHERE memberships.user_id = auth.uid()
+    AND memberships.org_id = posts.org_id
+  )
+);
+
+-- The Fix: Ensure that memberships.user_id and memberships.org_id
+-- have a composite index to make the subquery fast.
+CREATE INDEX idx_memberships_user_org ON memberships (user_id, org_id);</code></pre>
+
+                <h2>Mistake #5: Using LIMIT & OFFSET for Deep Pagination</h2>
+
+                <p>This is the standard way to implement pagination, but it breaks down on large datasets.</p>
+
+                <h3>What it is</h3>
+
+                <p>Using <code>OFFSET</code> to skip a large number of rows for "deep" pages (e.g., page 1,000).</p>
+
+                <h3>Why it's a problem</h3>
+
+                <p>When you run <code>LIMIT 10 OFFSET 10000</code>, PostgreSQL still has to fetch all 10,010 rows from the disk, count through the first 10,000, discard them, and then return the final 10. This gets progressively slower as the <code>OFFSET</code> number increases.</p>
+
+                <h3>The Fix</h3>
+
+                <p>Use cursor-based pagination (also known as keyset pagination). Instead of tracking the page number, you track the value of the column you're sorting by (like <code>created_at</code>) from the last item on the previous page and ask for the "next" N items after that "cursor". This is incredibly efficient because the database can use an index to jump directly to the starting point.</p>
+
+                <pre><code class="language-sql">-- The slow way for page 1001:
+SELECT * FROM events ORDER BY created_at DESC LIMIT 10 OFFSET 10000;
+
+-- The fast, cursor-based way:
+-- (Assuming the last event from the previous page had a created_at of '2025-08-19 14:00:00')
+SELECT * FROM events
+WHERE created_at < '2025-08-19 14:00:00'
+ORDER BY created_at DESC
+LIMIT 10;</code></pre>
+
+                <h2>How to Diagnose Your Problems: Meet EXPLAIN ANALYZE</h2>
+
+                <p>You don't have to guess which of these mistakes you're making. PostgreSQL gives you a powerful diagnostic tool that you can run directly in the Supabase SQL Editor.</p>
+
+                <p>Simply put <code>EXPLAIN ANALYZE</code> in front of any slow query. It will return the database's query execution plan, showing you exactly what steps it took, how long each step took, and whether it used an index.</p>
+
+                <p>If you see the words <code>"Seq Scan"</code> (Sequential Scan), it's a huge red flag that you're missing an index. After you add an index, the plan should change to <code>"Index Scan,"</code> and the query time should drop dramatically.</p>
+
+                <h2>Conclusion</h2>
+
+                <p>Supabase empowers you to build incredible things without being a database expert. But as your application grows, a little bit of database knowledge goes a long way. By avoiding these five common mistakes, you can ensure your application remains fast, scalable, and ready for whatever you throw at it.</p>
+
+                <p>Start indexing your foreign keys, be specific with your select statements, JOIN your related data, keep your RLS policies simple, and use cursor-based pagination. And when in doubt, let <code>EXPLAIN ANALYZE</code> be your guide.</p>
+
+                <p>Mastering these techniques is a <strong>developer superpower</strong>. As your application's complexity continues to grow, automating this detection process with specialized performance platforms is the next step to ensuring your database remains efficient at scale, freeing you up to do what you do best: build.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="../assets/logo.png" alt="Datapace Logo" class="footer-logo">
+                <span class="footer-brand-text">Datapace</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html">Home</a>
+                <a href="index.html">Blog</a>
+                <a href="https://app.datapace.ai">Get Started</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

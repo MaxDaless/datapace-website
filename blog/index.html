@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0HRD8ZJ8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-BT0HRD8ZJ8');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Datapace</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../assets/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <a href="../index.html" class="logo" aria-label="datapace.ai Homepage">
+                    <img src="../assets/logo.png" alt="Datapace Wave Logo">
+                    <span class="logo-text">datapace</span>
+                </a>
+                <div class="nav-links">
+                    <a href="../index.html#features">Features</a>
+                    <a href="../index.html#how-it-works">How It Works</a>
+                    <a href="../index.html#pricing">Pricing</a>
+                    <a href="../index.html#faq">FAQ</a>
+                    <a href="index.html" class="active">Blog</a>
+                </div>
+                <div class="nav-ctas">
+                    <a href="https://app.datapace.ai" class="cta-button">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="blog-main">
+        <div class="blog-hero">
+            <div class="blog-header">
+                <h1>Database Performance Insights</h1>
+                <p>Expert guides, case studies, and best practices for optimizing your database performance and reducing cloud costs.</p>
+            </div>
+        </div>
+
+        <div class="blog-content">
+            <!-- Search and Filter Section -->
+            <div class="blog-filters">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search articles..." class="search-input">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
+                
+                <div class="tag-filters">
+                    <button class="tag-filter active" data-tag="all">All Articles</button>
+                    <button class="tag-filter" data-tag="case-study">Case Studies</button>
+                    <button class="tag-filter" data-tag="tutorial">Tutorials</button>
+                    <button class="tag-filter" data-tag="finops">FinOps</button>
+                    <button class="tag-filter" data-tag="debugging">Debugging</button>
+                    <button class="tag-filter" data-tag="cost-optimization">Cost Optimization</button>
+                    <button class="tag-filter" data-tag="strategy">Strategy</button>
+                    <button class="tag-filter" data-tag="best-practices">Best Practices</button>
+                    <button class="tag-filter" data-tag="scaling">Scaling</button>
+                </div>
+            </div>
+
+            <div class="blog-grid" id="blogGrid">
+                <article class="blog-card" data-tags="case-study" data-title="case study how our ai cut our supabase dashboard queries from 61 to 1" data-excerpt="sometimes the most dangerous performance problems aren't the ones you can see this is the story of how our ai diagnosed a severe n+1 query storm and cut dashboard query load by over 98%">
+                    <div class="blog-card-content">
+                        <h2><a href="case-study-how-our-ai-cut-our-supabase-dashboard-queries-from-61-to-1.html">Case Study: How Our AI Cut Our Supabase Dashboard Queries from 61 to 1</a></h2>
+                        <p class="blog-excerpt">Sometimes, the most dangerous performance problems aren't the ones you can see. This is the story of how our AI diagnosed a severe N+1 query storm and cut dashboard query load by over 98%.</p>
+                        <div class="blog-meta">
+                            <span class="blog-category">Case Study</span>
+                            <span class="blog-read-time">8 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-tags="tutorial" data-title="a developer's guide to explain 3 levels of mastering supabase query performance" data-excerpt="the answer is explain the most important command for any developer working on a postgres-backed service like supabase this guide will demystify explain in three levels">
+                    <div class="blog-card-content">
+                        <h2><a href="3-levels-of-mastering-supabase-query-performance.html">A Developer's Guide to EXPLAIN: 3 Levels of Mastering Supabase Query Performance</a></h2>
+                        <p class="blog-excerpt">The answer is EXPLAIN, the most important command for any developer working on a Postgres-backed service like Supabase. This guide will demystify EXPLAIN in three levels.</p>
+                        <div class="blog-meta">
+                            <span class="blog-category">Tutorial</span>
+                            <span class="blog-read-time">12 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-tags="tutorial" data-title="a developer's guide to pg_stat_statements in supabase" data-excerpt="learn how to use postgresql's pg_stat_statements extension to identify performance bottlenecks in your supabase applications">
+                    <div class="blog-card-content">
+                        <h2><a href="a-developers-guide-to-pg-stat-statements-in-supabase.html">A Developer's Guide to pg_stat_statements in Supabase</a></h2>
+                        <p class="blog-excerpt">Learn how to use PostgreSQL's pg_stat_statements extension to identify performance bottlenecks in your Supabase applications.</p>
+                        <div class="blog-meta">
+                            <span class="blog-category">Tutorial</span>
+                            <span class="blog-read-time">10 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-tags="finops" data-title="database cost optimization how to turn finops theory into practice" data-excerpt="transform finops theory into actionable database cost optimization strategies that deliver real savings">
+                    <div class="blog-card-content">
+                        <h2><a href="database-cost-optimization-how-to-turn-finops-theory-into-practice.html">Database Cost Optimization: How to Turn FinOps Theory into Practice</a></h2>
+                        <p class="blog-excerpt">Transform FinOps theory into actionable database cost optimization strategies that deliver real savings.</p>
+                        <div class="blog-meta">
+                            <span class="blog-category">FinOps</span>
+                            <span class="blog-read-time">15 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-tags="debugging" data-title="how i found and fixed a hidden n+1 query in my supabase app" data-excerpt="a step-by-step walkthrough of identifying and resolving n+1 query problems that can silently kill your application performance">
+                    <div class="blog-card-content">
+                        <h2><a href="how-i-found-and-fixed-a-hidden-n1-query-in-my-supabase-app.html">How I Found and Fixed a Hidden N+1 Query in My Supabase App</a></h2>
+                        <p class="blog-excerpt">A step-by-step walkthrough of identifying and resolving N+1 query problems that can silently kill your application performance.</p>
+                        <div class="blog-meta">
+                            <span class="blog-category">Debugging</span>
+                            <span class="blog-read-time">7 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-tags="cost-optimization" data-title="how a single full table scan can secretly double your supabase bill" data-excerpt="discover how one poorly optimized query can dramatically increase your cloud database costs and learn how to prevent it">
+                    <div class="blog-card-content">
+                        <h2><a href="how-a-single-full-table-scan-can-secretly-double-your-supabase-bill.html">How a Single Full Table Scan Can Secretly Double Your Supabase Bill</a></h2>
+                        <p class="blog-excerpt">Discover how one poorly optimized query can dramatically increase your cloud database costs and learn how to prevent it.</p>
+                        <div class="blog-meta">
+                            <span class="blog-category">Cost Optimization</span>
+                            <span class="blog-read-time">9 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-tags="strategy" data-title="stop performance theater how to close the loop on database optimization" data-excerpt="move beyond performance theater to implement real measurable database optimization strategies that make a difference">
+                    <div class="blog-card-content">
+                        <h2><a href="stop-performance-theater-how-to-close-the-loop-on-database-optimization.html">Stop 'Performance Theater': How to Close the Loop on Database Optimization</a></h2>
+                        <p class="blog-excerpt">Move beyond performance theater to implement real, measurable database optimization strategies that make a difference.</p>
+                        <div class="blog-meta">
+                            <span class="blog-category">Strategy</span>
+                            <span class="blog-read-time">11 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-tags="best-practices" data-title="the 5 most common sql mistakes developers make" data-excerpt="avoid these common sql pitfalls that can hurt your application's performance and scalability">
+                    <div class="blog-card-content">
+                        <h2><a href="the-5-most-common-sql-mistakes-developers-make.html">The 5 Most Common SQL Mistakes Developers Make</a></h2>
+                        <p class="blog-excerpt">Avoid these common SQL pitfalls that can hurt your application's performance and scalability.</p>
+                        <div class="blog-meta">
+                            <span class="blog-category">Best Practices</span>
+                            <span class="blog-read-time">6 min read</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-card" data-tags="scaling" data-title="when to graduate from supabase monitoring" data-excerpt="understanding when your application has outgrown basic monitoring and needs more sophisticated database performance tools">
+                    <div class="blog-card-content">
+                        <h2><a href="when-to-graduate-from-supabase-monitoring.html">When to Graduate from Supabase Monitoring</a></h2>
+                        <p class="blog-excerpt">Understanding when your application has outgrown basic monitoring and needs more sophisticated database performance tools.</p>
+                        <div class="blog-meta">
+                            <span class="blog-category">Scaling</span>
+                            <span class="blog-read-time">8 min read</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="../assets/logo.png" alt="Datapace Logo" class="footer-logo">
+                <span class="footer-brand-text">Datapace</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html">Home</a>
+                <a href="#" class="active">Blog</a>
+                <a href="https://app.datapace.ai">Get Started</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Blog Search and Filter Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const tagFilters = document.querySelectorAll('.tag-filter');
+            const blogGrid = document.getElementById('blogGrid');
+            const blogCards = document.querySelectorAll('.blog-card');
+            
+            let currentTag = 'all';
+            let currentSearch = '';
+            
+            // Debug: Check if elements are found
+            console.log('Search input found:', !!searchInput);
+            console.log('Tag filters found:', tagFilters.length);
+            console.log('Blog cards found:', blogCards.length);
+            
+            if (!searchInput || !blogCards.length) {
+                console.error('Required elements not found!');
+                return;
+            }
+            
+            // Search functionality
+            searchInput.addEventListener('input', function(e) {
+                currentSearch = e.target.value.toLowerCase().trim();
+                console.log('Search query:', currentSearch);
+                filterArticles();
+            });
+            
+            // Also trigger on keyup for better responsiveness
+            searchInput.addEventListener('keyup', function(e) {
+                currentSearch = e.target.value.toLowerCase().trim();
+                filterArticles();
+            });
+            
+            // Tag filter functionality
+            tagFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Remove active class from all filters
+                    tagFilters.forEach(f => f.classList.remove('active'));
+                    // Add active class to clicked filter
+                    this.classList.add('active');
+                    
+                    currentTag = this.getAttribute('data-tag');
+                    filterArticles();
+                });
+            });
+            
+            function filterArticles() {
+                let visibleCount = 0;
+                
+                blogCards.forEach(card => {
+                    const cardTags = card.getAttribute('data-tags') || '';
+                    const cardTitle = card.getAttribute('data-title') || '';
+                    const cardExcerpt = card.getAttribute('data-excerpt') || '';
+                    
+                    // Check tag filter
+                    const tagMatch = currentTag === 'all' || cardTags.toLowerCase().includes(currentTag.toLowerCase());
+                    
+                    // Check search filter - make search more flexible
+                    const searchText = (cardTitle + ' ' + cardExcerpt + ' ' + cardTags).toLowerCase();
+                    const searchMatch = currentSearch === '' || searchText.includes(currentSearch);
+                    
+                    if (tagMatch && searchMatch) {
+                        card.style.display = 'block';
+                        card.style.opacity = '0';
+                        card.style.animation = 'fadeIn 0.3s ease forwards';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Show/hide no results message
+                showNoResultsMessage(visibleCount === 0);
+                updateResultsInfo(visibleCount);
+            }
+            
+            function showNoResultsMessage(show) {
+                let noResultsDiv = document.getElementById('noResults');
+                
+                if (show && !noResultsDiv) {
+                    noResultsDiv = document.createElement('div');
+                    noResultsDiv.id = 'noResults';
+                    noResultsDiv.className = 'no-results';
+                    noResultsDiv.innerHTML = `
+                        <h3>No articles found</h3>
+                        <p>Try adjusting your search terms or selecting a different category.</p>
+                    `;
+                    blogGrid.appendChild(noResultsDiv);
+                } else if (!show && noResultsDiv) {
+                    noResultsDiv.remove();
+                }
+            }
+            
+            function updateResultsInfo(count) {
+                let infoDiv = document.getElementById('resultsInfo');
+                
+                if (!infoDiv) {
+                    infoDiv = document.createElement('div');
+                    infoDiv.id = 'resultsInfo';
+                    infoDiv.className = 'search-results-info';
+                    blogGrid.parentNode.insertBefore(infoDiv, blogGrid);
+                }
+                
+                if (currentSearch || currentTag !== 'all') {
+                    const total = blogCards.length;
+                    infoDiv.textContent = `Showing ${count} of ${total} articles`;
+                    infoDiv.style.display = 'block';
+                } else {
+                    infoDiv.style.display = 'none';
+                }
+            }
+            
+            // Add CSS animation for fade in
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Debug logging
+            console.log('Blog search initialized');
+            console.log('Found', blogCards.length, 'blog cards');
+            
+            // Test search immediately
+            filterArticles();
+        });
+    </script>
+</body>
+</html>

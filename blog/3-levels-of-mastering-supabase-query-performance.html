@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0HRD8ZJ8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-BT0HRD8ZJ8');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Developer's Guide to EXPLAIN: 3 Levels of Mastering Supabase Query Performance - Datapace Blog</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../assets/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <a href="../index.html" class="logo" aria-label="datapace.ai Homepage">
+                    <img src="../assets/logo.png" alt="Datapace Wave Logo">
+                    <span class="logo-text">datapace</span>
+                </a>
+                <div class="nav-links">
+                    <a href="../index.html#features">Features</a>
+                    <a href="../index.html#how-it-works">How It Works</a>
+                    <a href="../index.html#pricing">Pricing</a>
+                    <a href="../index.html#faq">FAQ</a>
+                    <a href="index.html">Blog</a>
+                </div>
+                <div class="nav-ctas">
+                    <a href="https://app.datapace.ai" class="cta-button">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="article-main">
+        <div class="article-content">
+            <a href="index.html" class="back-to-blog">← Back to Blog</a>
+            
+            <article class="article-header">
+                <h1 class="article-title">A Developer's Guide to EXPLAIN: 3 Levels of Mastering Supabase Query Performance</h1>
+                <div class="article-meta">
+                    <span class="blog-category">Performance</span>
+                    <span class="blog-read-time">8 min read</span>
+                </div>
+            </article>
+            
+            <div class="article-body">
+                <p>As a developer, you live by the performance of your API. When an endpoint is slow, your first instinct might be to check your application code, but more often than not, the real bottleneck is hiding in your database query.</p>
+
+                <p>But how do you prove it? How do you look inside PostgreSQL and ask, "What are you <em>really</em> doing, and why is it taking so long?"</p>
+
+                <p>The answer is <code>EXPLAIN</code>, the most important command for any developer working on a Postgres-backed service like Supabase. This guide will demystify <code>EXPLAIN</code> in three levels, showing you how to diagnose the exact cause of a slow query and turn your API from sluggish to snappy.</p>
+
+                <blockquote>
+                    <p><strong>TL;DR:</strong></p>
+                    <ol>
+                        <li><strong>Level 1 (<code>EXPLAIN</code>):</strong> Shows the <em>estimated plan</em> and helps you spot obvious issues like a <code>Seq Scan</code> (full table scan).</li>
+                        <li><strong>Level 2 (<code>EXPLAIN ANALYZE</code>):</strong> <em>Executes the query</em> and shows you the <em>actual time</em> taken, confirming if the query is truly slow.</li>
+                        <li><strong>Level 3 (<code>EXPLAIN ANALYZE, BUFFERS</code>):</strong> Reveals the <em>I/O cost</em>, showing how many data blocks were read from disk—a key driver of your cloud bill.</li>
+                    </ol>
+                </blockquote>
+
+                <hr>
+
+                <h2>What is an Execution Plan?</h2>
+
+                <p>When you send a query to Postgres, its sophisticated planner first decides on the most efficient way to fetch the data. This step-by-step recipe is called an <strong>execution plan</strong>. Think of it as the GPS navigation for your data request. The <code>EXPLAIN</code> command simply asks the planner to show you the map without starting the car.</p>
+
+                <hr>
+
+                <h2>Level 1: The Blueprint (<code>EXPLAIN</code>) 🗺️</h2>
+
+                <p>Let's start with a common query on a large <code>orders</code> table.</p>
+
+                <pre><code class="language-sql">EXPLAIN SELECT * FROM orders WHERE user_id = 'some-user-id';</code></pre>
+
+                <pre><code class="language-text">-- Seq Scan on orders  (cost=0.00..25855.00 rows=10 width=120)
+--   Filter: (user_id = 'some-user-id'::uuid)</code></pre>
+
+                <p><strong>How to Read This:</strong></p>
+
+                <ul>
+                    <li><strong><code>Seq Scan</code></strong>: This is your smoking gun. It means PostgreSQL is performing a <strong>Sequential Scan</strong> (a full table scan).</li>
+                    <li><strong><code>cost=0.00..25855.00</code></strong>: The planner's estimated "work units." A higher number is bad. <strong>25,855 is very high.</strong></li>
+                    <li><strong>Takeaway:</strong> This immediately tells us we're doing a full table scan, almost certainly due to a missing index on <code>user_id</code>.</li>
+                </ul>
+
+                <hr>
+
+                <h2>Level 2: The Reality Check (<code>EXPLAIN ANALYZE</code>) ⏱️</h2>
+
+                <p>The basic <code>EXPLAIN</code> is just an estimate. To see what <em>actually</em> happens, we add <code>ANALYZE</code>.</p>
+                <p><strong>Warning:</strong> This command <em>executes</em> the query, so do not use it with <code>UPDATE</code> or <code>DELETE</code> on production data.</p>
+
+                <pre><code class="language-sql">EXPLAIN ANALYZE SELECT * FROM orders WHERE user_id = 'some-user-id';</code></pre>
+
+                <pre><code class="language-text">-- Seq Scan on orders  (cost=0.00..25855.00 rows=10 width=120) (actual time=0.025..350.450 rows=10 loops=1)
+--   Filter: (user_id = 'some-user-id'::uuid)
+-- Planning Time: 0.150 ms
+-- Execution Time: 350.500 ms</code></pre>
+
+                <p><strong>What's New:</strong></p>
+
+                <ul>
+                    <li><strong><code>actual time=...350.450</code></strong>: The real-world timing. It took <strong>350.5 milliseconds</strong> to execute. This is the latency your user feels.</li>
+                    <li><strong>Takeaway:</strong> <code>EXPLAIN ANALYZE</code> gives you the ground truth. It confirms our suspicion: the query is slow because of the full table scan.</li>
+                </ul>
+
+                <hr>
+
+                <h2>Level 3: The I/O Deep Dive (<code>EXPLAIN ANALYZE, BUFFERS</code>) 💾</h2>
+
+                <p>This is the most advanced version, revealing the query's interaction with memory and disk—a direct link to your cloud bill.</p>
+
+                <pre><code class="language-sql">EXPLAIN (ANALYZE, BUFFERS) SELECT * FROM orders WHERE user_id = 'some-user-id';</code></pre>
+
+                <pre><code class="language-text">-- Seq Scan on orders  (cost=0.00..25855.00 rows=10 width=120) (actual time=0.025..350.450 rows=10 loops=1)
+--   Filter: (user_id = 'some-user-id'::uuid)
+--   Buffers: shared read=15830
+-- Planning Time: 0.150 ms
+-- Execution Time: 350.500 ms</code></pre>
+
+                <p><strong>What's New:</strong></p>
+
+                <ul>
+                    <li><strong><code>Buffers: shared read=15830</code></strong>: This is the goldmine. It shows Postgres had to <strong>read 15,830 blocks from disk</strong>. Disk I/O is slow and expensive.</li>
+                    <li><strong>Takeaway:</strong> We've proven the query is slow, inefficient, and costly.</li>
+                </ul>
+
+                <hr>
+
+                <h2>The Fix: From "Seq Scan" to "Index Scan"</h2>
+
+                <p>Now that we have a full diagnosis, we add an index.</p>
+
+                <pre><code class="language-sql">CREATE INDEX idx_orders_user_id ON orders (user_id);
+
+EXPLAIN (ANALYZE, BUFFERS) SELECT * FROM orders WHERE user_id = 'some-user-id';</code></pre>
+
+                <pre><code class="language-text">-- Index Scan using idx_orders_user_id on orders  (cost=0.42..8.44 rows=10 width=120) (actual time=0.035..0.045 rows=10 loops=1)
+--   Index Cond: (user_id = 'some-user-id'::uuid)
+--   Buffers: shared hit=4 read=3
+-- Planning Time: 0.250 ms
+-- Execution Time: 0.065 ms</code></pre>
+
+                <p><strong>The Transformation:</strong></p>
+
+                <ul>
+                    <li>The plan is now an <strong><code>Index Scan</code></strong>.</li>
+                    <li><strong>Execution Time</strong> dropped from <strong>350ms to 0.065ms</strong> (over 5,000x faster).</li>
+                    <li><strong>Disk reads</strong> dropped from <strong>15,830 to just 3</strong>.</li>
+                </ul>
+
+                <hr>
+
+                <h2>From Manual Analysis to an Automated Co-Pilot</h2>
+
+                <p>This three-level workflow is incredibly powerful, but it's also <strong>manual and reactive</strong>. You often don't think to run <code>EXPLAIN</code> until a user is already complaining.</p>
+
+                <p>This is where Datapace becomes your performance co-pilot. Our platform is designed to <strong>automate this entire three-level analysis for you</strong>:</p>
+
+                <ol>
+                    <li>Instead of you guessing which query to check, Datapace uses signals like <code>pg_stat_statements</code> to <strong>automatically surface your most impactful queries</strong>.</li>
+                    <li>It then <strong>automatically runs the <code>EXPLAIN</code> analysis</strong>, highlighting the key bottlenecks like <code>Seq Scans</code> and high I/O from <code>Buffers</code>.</li>
+                    <li>Finally, it provides a <strong>concrete recommendation</strong> (like "Add this index"), turning a 30-minute manual deep dive into a proactive insight.</li>
+                </ol>
+
+                <hr>
+
+                <h2>Conclusion</h2>
+
+                <p>Mastering <code>EXPLAIN</code> is a superpower for any developer building on Supabase. This three-level approach gives you a complete picture of your query's performance.</p>
+
+                <p>Start with <code>EXPLAIN</code> for the blueprint, use <code>EXPLAIN ANALYZE</code> for the reality check, and add <code>BUFFERS</code> to understand the I/O cost. While this manual skill is invaluable, using an automated platform like Datapace is the key to applying this power continuously and proactively across your entire application.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="../assets/logo.png" alt="Datapace Logo" class="footer-logo">
+                <span class="footer-brand-text">Datapace</span>
+            </div>
+            <div class="footer-links">
+                <a href="../index.html">Home</a>
+                <a href="index.html">Blog</a>
+                <a href="https://app.datapace.ai">Get Started</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
