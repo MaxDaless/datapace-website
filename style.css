@@ -2034,8 +2034,21 @@ footer { background: var(--bg-dark); color: white; padding: 80px 0 40px 0; font-
         display: none;
     }
     
+    .nav-content {
+        gap: var(--space-sm); /* Reduce gap on mobile */
+        flex-wrap: nowrap;
+        overflow: hidden;
+    }
+    
     .nav-ctas {
-        gap: var(--space-sm);
+        gap: var(--space-xs);
+        flex-shrink: 0;
+    }
+    
+    .nav-ctas .cta-button {
+        padding: var(--space-xs) var(--space-sm); /* Smaller padding on mobile */
+        font-size: var(--text-xs);
+        white-space: nowrap;
     }
     
     /* Responsive data flows for mobile */
@@ -2065,11 +2078,6 @@ footer { background: var(--bg-dark); color: white; padding: 80px 0 40px 0; font-
         display: none;
     }
     
-    .nav-ctas .demo-button,
-    .nav-ctas .cta-button {
-        font-size: var(--text-xs);
-        padding: var(--space-sm) var(--space-md);
-    }
     
     /* Mobile hero */
     .hero {
@@ -2212,7 +2220,12 @@ footer { background: var(--bg-dark); color: white; padding: 80px 0 40px 0; font-
     
     .faq-answer {
         font-size: var(--text-sm);
-        color: var(--dark-text) !important; /* Better contrast on mobile */
+        color: #1E293B !important; /* Force dark color on mobile */
+    }
+    
+    /* Fix FAQ questions contrast on mobile */
+    .faq-question {
+        color: #1E293B !important; /* Force dark color on mobile */
     }
     
     /* Improve contrast for use case cards on mobile */
