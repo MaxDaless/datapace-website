@@ -9,6 +9,9 @@ markdown: kramdown
 highlighter: rouge
 permalink: pretty
 
+# Clean URLs for blog posts
+permalink: /:categories/:title/
+
 # Plugins
 plugins:
   - jekyll-sitemap
