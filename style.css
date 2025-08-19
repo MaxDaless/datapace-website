@@ -2225,8 +2225,8 @@ footer { background: var(--bg-dark); color: white; padding: 80px 0 40px 0; font-
         color: var(--dark-text) !important; /* Better contrast on mobile */
     }
     
-    /* Fix contrast for FAQ section subtitle on mobile */
-    #faq .section-header .section-subtitle {
+    /* Fix contrast for FAQ section title on mobile */
+    #faq .section-header .section-title {
         color: var(--dark-text) !important; /* Better contrast on mobile */
     }
     
