@@ -32,6 +32,7 @@ CREATE TABLE applications (
     -- Metadata
     position TEXT DEFAULT 'Senior Software Engineer',
     status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'reviewing', 'interview', 'rejected', 'hired')),
+    waiting_list BOOLEAN DEFAULT FALSE,
     notes TEXT,
     
     -- Indexes for searching

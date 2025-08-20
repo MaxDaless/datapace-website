@@ -259,6 +259,14 @@
                             </select>
                         </div>
                         
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="waitingList" name="waitingList" value="true">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">Add me to the Datapace product waiting list for early access to our AI-powered database optimization platform</span>
+                            </label>
+                        </div>
+                        
                         <div class="form-actions">
                             <button type="submit" class="submit-button">
                                 <span>Submit Application</span>
@@ -542,6 +550,7 @@
                         cover_letter: sanitizeInput(formData.get('coverLetter')),
                         tech_experience: sanitizeInput(formData.get('techExperience')),
                         availability: sanitizeInput(formData.get('availability')),
+                        waiting_list: formData.get('waitingList') === 'true',
                         resume_filename: sanitizeInput(resumeFilename),
                         resume_url: resumeUrl,
                         resume_size: resumeSize
@@ -564,7 +573,17 @@
                     
                     // Success! Record the attempt
                     rateLimiter.recordAttempt();
-                    alert('Thank you for your application! We\'ve received it and will review it within 5 business days. You should receive a confirmation email shortly.');
+                    
+                    // Show success message with LinkedIn follow suggestion
+                    const followLinkedIn = confirm(
+                        '✅ Thank you for your application! We\'ve received it and will review it within 5 business days.\n\n' +
+                        '🔔 Would you like to follow our LinkedIn page to stay updated on company news and hiring updates?\n\n' +
+                        'Click "OK" to visit our LinkedIn page, or "Cancel" to continue.'
+                    );
+                    
+                    if (followLinkedIn) {
+                        window.open('https://www.linkedin.com/company/datapaceai/', '_blank', 'noopener,noreferrer');
+                    }
                     
                     // Reset form
                     this.reset();
