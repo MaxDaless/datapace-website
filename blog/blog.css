@@ -497,22 +497,51 @@ nav.scrolled {
 
 .footer-links {
     display: flex;
-    gap: 2rem;
+    gap: 3rem;
+    align-items: flex-start;
 }
 
-.footer-links a {
+.footer-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-col h4 {
+    color: #F9FAFB;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-col a {
     color: #D1D5DB;
     text-decoration: none;
     transition: color 0.2s ease;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
 }
 
-.footer-links a:hover {
-    color: #F9FAFB;
-}
-
-.footer-links a.active {
+.footer-col a:hover {
     color: #00C9A7;
+    opacity: 1;
+}
+
+.footer-col a.active {
+    color: #00C9A7;
+    font-weight: 600;
+    opacity: 1;
 }
 
 /* Article page styles */

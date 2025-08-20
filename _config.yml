@@ -21,6 +21,7 @@ plugins:
 include:
   - _pages
   - blog
+  - careers
 
 exclude:
   - README.md

@@ -1,7 +1,12 @@
 DirectoryIndex index.html
 
-# Enable directory indexes for blog folder
+# Enable directory indexes for subdirectories
 Options +Indexes
+
+# Ensure index.html is served for directories
+<IfModule mod_dir.c>
+    DirectoryIndex index.html index.htm
+</IfModule>
 
 # Set default index file for directories
 <IfModule mod_dir.c>

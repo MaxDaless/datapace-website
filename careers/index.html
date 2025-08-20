@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0HRD8ZJ8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-BT0HRD8ZJ8');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers - Datapace</title>
+    <meta name="description" content="Join Datapace and help build the future of database performance optimization. We're looking for talented engineers to join our growing team.">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../assets/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="careers.css">
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <a href="../index.html" class="logo" aria-label="datapace.ai Homepage">
+                    <img src="../assets/logo.png" alt="Datapace Wave Logo">
+                    <span class="logo-text">datapace</span>
+                </a>
+                <div class="nav-links">
+                    <a href="../index.html#features">Features</a>
+                    <a href="../index.html#how-it-works">How It Works</a>
+                    <a href="../index.html#pricing">Pricing</a>
+                    <a href="../index.html#faq">FAQ</a>
+                </div>
+                <div class="nav-ctas">
+                    <a href="https://app.datapace.ai" class="cta-button">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="careers-main">
+        <div class="careers-hero">
+            <div class="careers-header">
+                <h1>Join Our Mission</h1>
+                <p>Help us build the future of database performance optimization. We're looking for talented engineers who are passionate about solving complex problems and making developers' lives better.</p>
+            </div>
+        </div>
+
+        <div class="careers-content">
+            <!-- Company Values Section -->
+            <section class="values-section">
+                <div class="container">
+                    <h2>Why Work at Datapace?</h2>
+                    <div class="values-grid">
+                        <div class="value-card">
+                            <div class="value-icon">🚀</div>
+                            <h3>Fast-Growing Startup</h3>
+                            <p>Join us in the early stages and make a significant impact on product direction and company culture.</p>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon">🧠</div>
+                            <h3>Cutting-Edge AI</h3>
+                            <p>Work with the latest AI technologies to solve real database performance problems at scale.</p>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon">🌍</div>
+                            <h3>Remote-First</h3>
+                            <p>Work from anywhere with flexible hours and a culture that values work-life balance.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Open Positions -->
+            <section class="positions-section">
+                <div class="container">
+                    <h2>Open Positions</h2>
+                    
+                    <div class="job-listing">
+                        <div class="job-header">
+                            <div class="job-title-area">
+                                <h3>Senior Software Engineer</h3>
+                                <div class="job-meta">
+                                    <span class="job-type">Part-time</span>
+                                    <span class="job-location">Remote</span>
+                                    <span class="job-department">Engineering</span>
+                                </div>
+                            </div>
+                            <button class="apply-button" onclick="scrollToApplication()">Apply Now</button>
+                        </div>
+                        
+                        <div class="job-content">
+                            <div class="job-description">
+                                <h4>About the Role</h4>
+                                <p>We're looking for a Senior Software Engineer to join our core engineering team. You'll be building the next generation of database performance tools, working with cutting-edge AI technologies, and helping developers around the world optimize their applications.</p>
+                                
+                                <h4>What You'll Do</h4>
+                                <ul>
+                                    <li>Design and implement core features for our AI-powered database optimization platform</li>
+                                    <li>Build scalable backend systems that process millions of database queries</li>
+                                    <li>Develop intuitive frontend experiences using Next.js and modern web technologies</li>
+                                    <li>Work closely with our AI team to integrate machine learning models into production systems</li>
+                                    <li>Collaborate with product and design teams to deliver exceptional user experiences</li>
+                                    <li>Mentor junior engineers and contribute to engineering best practices</li>
+                                </ul>
+                                
+                                <h4>Technologies We Use</h4>
+                                <div class="tech-stack">
+                                    <span class="tech-tag">Next.js</span>
+                                    <span class="tech-tag">TypeScript</span>
+                                    <span class="tech-tag">Python</span>
+                                    <span class="tech-tag">Rust</span>
+                                    <span class="tech-tag">PostgreSQL</span>
+                                    <span class="tech-tag">Redis</span>
+                                    <span class="tech-tag">Docker</span>
+                                    <span class="tech-tag">AWS</span>
+                                    <span class="tech-tag">React</span>
+                                    <span class="tech-tag">FastAPI</span>
+                                </div>
+                                
+                                <h4>What We're Looking For</h4>
+                                <ul>
+                                    <li><strong>5+ years of software engineering experience</strong> with a track record of shipping production systems</li>
+                                    <li><strong>Frontend expertise:</strong> Proficiency in Next.js, React, TypeScript, and modern CSS</li>
+                                    <li><strong>Backend expertise:</strong> Experience with Python (FastAPI, Django) or Rust, and database systems</li>
+                                    <li><strong>Database knowledge:</strong> Understanding of SQL, query optimization, and database performance</li>
+                                    <li><strong>Cloud experience:</strong> Familiarity with AWS, Docker, and modern deployment practices</li>
+                                    <li><strong>Startup mindset:</strong> Ability to work in a fast-paced environment and wear multiple hats</li>
+                                    <li><strong>Communication skills:</strong> Excellent written and verbal communication for remote collaboration</li>
+                                </ul>
+                                
+                                <h4>Bonus Points</h4>
+                                <ul>
+                                    <li>Experience with database performance monitoring and optimization tools</li>
+                                    <li>Background in machine learning or AI systems integration</li>
+                                    <li>Open source contributions or technical writing</li>
+                                    <li>Experience with Supabase, PlanetScale, or other modern database platforms</li>
+                                    <li>Previous startup experience</li>
+                                </ul>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Application Form -->
+            <section class="application-section" id="application">
+                <div class="container">
+                    <div class="application-header">
+                        <h2>Ready to Apply?</h2>
+                        <p>We'd love to hear from you! Please fill out the form below and attach your resume.</p>
+                    </div>
+                    
+                    <form class="application-form" id="applicationForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="location">Location *</label>
+                                <input type="text" id="location" name="location" placeholder="City, Country" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="experience">Years of Experience *</label>
+                                <select id="experience" name="experience" required>
+                                    <option value="">Select experience level</option>
+                                    <option value="3-5">3-5 years</option>
+                                    <option value="5-7">5-7 years</option>
+                                    <option value="7-10">7-10 years</option>
+                                    <option value="10+">10+ years</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="linkedin">LinkedIn Profile</label>
+                            <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="github">GitHub Profile</label>
+                            <input type="url" id="github" name="github" placeholder="https://github.com/yourusername">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="portfolio">Portfolio/Website</label>
+                            <input type="url" id="portfolio" name="portfolio" placeholder="https://yourwebsite.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="resume">Resume/CV *</label>
+                            <div class="file-upload">
+                                <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+                                <label for="resume" class="file-upload-label">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7,10 12,15 17,10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    <span>Choose file or drag here</span>
+                                </label>
+                                <div class="file-info"></div>
+                            </div>
+                            <small>Accepted formats: PDF, DOC, DOCX (max 5MB)</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="coverLetter">Why are you interested in Datapace? *</label>
+                            <textarea id="coverLetter" name="coverLetter" rows="5" placeholder="Tell us what excites you about this role and how you can contribute to our mission..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="techExperience">Technical Experience</label>
+                            <textarea id="techExperience" name="techExperience" rows="4" placeholder="Briefly describe your experience with Next.js, Python, Rust, or database technologies..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="availability">When can you start?</label>
+                            <select id="availability" name="availability">
+                                <option value="">Select availability</option>
+                                <option value="immediately">Immediately</option>
+                                <option value="2-weeks">2 weeks notice</option>
+                                <option value="1-month">1 month notice</option>
+                                <option value="2-months">2+ months</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="submit-button">
+                                <span>Submit Application</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12,5 19,12 12,19"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about footer-col">
+                     <a href="../index.html" class="logo" aria-label="datapace.ai Homepage">
+						<img src="../assets/logo.png" alt="Datapace Wave Logo">
+                        <span class="logo-text">datapace</span>
+					</a>
+                    <p>AI co-pilot that helps developers improve performance and cut cloud costs.</p>
+                </div>
+                 <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="../index.html#how-it-works">How It Works</a></li>
+                        <li><a href="../index.html#features">Features</a></li>
+                        <li><a href="../index.html#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                 <div class="footer-col">
+                    <h4>About</h4>
+                    <ul>
+                        <li><a href="../blog/">Blog</a></li>
+                        <li><a href="../careers/index.html" class="active">Careers</a></li>
+                    </ul>
+                </div>
+                 <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="../index.html#" onclick="openModal('terms-modal')">Terms of Service</a></li>
+                        <li><a href="../index.html#" onclick="openModal('privacy-modal')">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                 <div class="footer-copyright">
+                    &copy; 2025 datapace.ai. All rights reserved.
+                </div>
+                <div class="footer-socials">                   
+                    <a href="https://www.linkedin.com/company/datapaceai/" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></a>
+                    <a href="https://www.instagram.com/datapace_/" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://srggfllxshgobksljwcn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZ2dmbGx4c2hnb2Jrc2xqd2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2NTE0MDYsImV4cCI6MjA3MTIyNzQwNn0.n4YMzhPqH27SMBLgUOcXGMmofhqewEUtPMopFl3c_T8';
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Smooth scroll to application form
+        function scrollToApplication() {
+            document.getElementById('application').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // File upload handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('resume');
+            const fileInfo = document.querySelector('.file-info');
+            const fileLabel = document.querySelector('.file-upload-label span');
+            let selectedFile = null;
+
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Validate file size (5MB limit)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File size must be less than 5MB');
+                        fileInput.value = '';
+                        return;
+                    }
+                    
+                    // Validate file type
+                    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                    if (!allowedTypes.includes(file.type)) {
+                        alert('Please upload a PDF, DOC, or DOCX file');
+                        fileInput.value = '';
+                        return;
+                    }
+                    
+                    selectedFile = file;
+                    const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                    fileInfo.innerHTML = `
+                        <div class="file-selected">
+                            <strong>${file.name}</strong> (${fileSize} MB)
+                        </div>
+                    `;
+                    fileLabel.textContent = 'File selected';
+                } else {
+                    selectedFile = null;
+                    fileInfo.innerHTML = '';
+                    fileLabel.textContent = 'Choose file or drag here';
+                }
+            });
+
+            // Form submission with Supabase
+            document.getElementById('applicationForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitButton = document.querySelector('.submit-button');
+                const formData = new FormData(this);
+                
+                // Show loading state
+                submitButton.innerHTML = `
+                    <span>Submitting...</span>
+                    <div class="spinner"></div>
+                `;
+                submitButton.disabled = true;
+                
+                try {
+                    // Step 1: Upload resume to Supabase Storage (if file selected)
+                    let resumeUrl = null;
+                    let resumeFilename = null;
+                    let resumeSize = null;
+                    
+                    if (selectedFile) {
+                        const timestamp = Date.now();
+                        const filename = `${timestamp}_${selectedFile.name}`;
+                        
+                        const { data: uploadData, error: uploadError } = await supabase.storage
+                            .from('resumes')
+                            .upload(filename, selectedFile);
+                            
+                        if (uploadError) {
+                            throw new Error('Failed to upload resume: ' + uploadError.message);
+                        }
+                        
+                        // Get public URL for the uploaded file
+                        const { data: urlData } = supabase.storage
+                            .from('resumes')
+                            .getPublicUrl(filename);
+                            
+                        resumeUrl = urlData.publicUrl;
+                        resumeFilename = selectedFile.name;
+                        resumeSize = selectedFile.size;
+                    }
+                    
+                    // Step 2: Save application data to database
+                    const applicationData = {
+                        first_name: formData.get('firstName'),
+                        last_name: formData.get('lastName'),
+                        email: formData.get('email'),
+                        phone: formData.get('phone') || null,
+                        location: formData.get('location'),
+                        experience_level: formData.get('experience'),
+                        linkedin_url: formData.get('linkedin') || null,
+                        github_url: formData.get('github') || null,
+                        portfolio_url: formData.get('portfolio') || null,
+                        cover_letter: formData.get('coverLetter'),
+                        tech_experience: formData.get('techExperience') || null,
+                        availability: formData.get('availability') || null,
+                        resume_filename: resumeFilename,
+                        resume_url: resumeUrl,
+                        resume_size: resumeSize
+                    };
+                    
+                    const { data, error } = await supabase
+                        .from('applications')
+                        .insert([applicationData]);
+                        
+                    if (error) {
+                        throw new Error('Failed to submit application: ' + error.message);
+                    }
+                    
+                    // Success!
+                    alert('Thank you for your application! We\'ve received it and will review it within 5 business days. You should receive a confirmation email shortly.');
+                    
+                    // Reset form
+                    this.reset();
+                    selectedFile = null;
+                    fileInfo.innerHTML = '';
+                    fileLabel.textContent = 'Choose file or drag here';
+                    
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    alert('Sorry, there was an error submitting your application. Please try again or contact us directly at careers@datapace.ai');
+                } finally {
+                    // Reset button state
+                    submitButton.innerHTML = `
+                        <span>Submit Application</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12,5 19,12 12,19"></polyline>
+                        </svg>
+                    `;
+                    submitButton.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
