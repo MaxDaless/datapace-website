@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0HRD8ZJ8"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0HRD8ZJ8" crossorigin="anonymous"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -44,11 +44,9 @@
     <link rel="manifest" href="assets/site.webmanifest">
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     
-    <!-- Performance optimizations -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+    <!-- Local fonts for better performance and security -->
+    <link rel="preload" href="assets/inter-fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="assets/inter-fonts.css"></noscript>
     
     <!-- Critical CSS -->
     <link rel="stylesheet" href="style.css">
@@ -343,7 +341,7 @@
                             "Been using the beta for 3 months. Finally found the slow queries killing our checkout flow. The index suggestions actually worked and cut our p95 response time in half."
                         </blockquote>
                         <div class="testimonial-author">
-                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alex Chen" loading="lazy" width="50" height="50">
+                            <img src="assets/testimonial-alex.jpg" alt="Alex Chen" loading="lazy" width="50" height="50">
                             <div class="author-info">
                                 <strong>Alex Chen</strong>
                                 <span>Tech Lead, Mercury Bank</span>
@@ -359,7 +357,7 @@
                             "Honestly didn't expect much from another DB tool, but this actually helped. Found some missing indexes on our orders table that were costing us $3k/month in unnecessary compute."
                         </blockquote>
                         <div class="testimonial-author">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Martinez" loading="lazy" width="50" height="50">
+                            <img src="assets/testimonial-sarah.jpg" alt="Sarah Martinez" loading="lazy" width="50" height="50">
                             <div class="author-info">
                                 <strong>Sarah Martinez</strong>
                                 <span>Software Engineer, Gumroad</span>
@@ -375,7 +373,7 @@
                             "Way better than staring at DataDog dashboards trying to figure out what's wrong. Just tells you 'add this index' or 'rewrite this query'. Saved me hours of debugging."
                         </blockquote>
                         <div class="testimonial-author">
-                            <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Mike Rodriguez" loading="lazy" width="50" height="50">
+                            <img src="assets/testimonial-mike.jpg" alt="Mike Rodriguez" loading="lazy" width="50" height="50">
                             <div class="author-info">
                                 <strong>Mike Rodriguez</strong>
                                 <span>Senior Developer, Linear</span>

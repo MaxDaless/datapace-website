@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0HRD8ZJ8"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BT0HRD8ZJ8" crossorigin="anonymous"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="../careers/careers.css">
     
     <!-- Supabase Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav>
@@ -343,6 +343,37 @@
             });
         }
 
+        // Rate limiting implementation
+        class RateLimiter {
+            constructor(maxAttempts = 3, windowMs = 300000) { // 3 attempts per 5 minutes
+                this.maxAttempts = maxAttempts;
+                this.windowMs = windowMs;
+                this.attempts = JSON.parse(localStorage.getItem('applicationAttempts') || '[]');
+            }
+            
+            canMakeRequest() {
+                const now = Date.now();
+                // Remove old attempts outside the window
+                this.attempts = this.attempts.filter(attempt => now - attempt < this.windowMs);
+                
+                if (this.attempts.length >= this.maxAttempts) {
+                    const oldestAttempt = Math.min(...this.attempts);
+                    const timeUntilReset = this.windowMs - (now - oldestAttempt);
+                    const minutes = Math.ceil(timeUntilReset / 60000);
+                    throw new Error(`Too many submission attempts. Please wait ${minutes} minutes before trying again.`);
+                }
+                
+                return true;
+            }
+            
+            recordAttempt() {
+                this.attempts.push(Date.now());
+                localStorage.setItem('applicationAttempts', JSON.stringify(this.attempts));
+            }
+        }
+        
+        const rateLimiter = new RateLimiter();
+
         // File upload handling
         document.addEventListener('DOMContentLoaded', function() {
             const fileInput = document.getElementById('resume');
@@ -387,6 +418,14 @@
             document.getElementById('applicationForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
+                // Check rate limiting first
+                try {
+                    rateLimiter.canMakeRequest();
+                } catch (error) {
+                    alert(error.message);
+                    return;
+                }
+                
                 const submitButton = document.querySelector('.submit-button');
                 const formData = new FormData(this);
                 
@@ -411,7 +450,34 @@
                     
                     if (selectedFile) {
                         const timestamp = Date.now();
-                        const filename = `${timestamp}_${selectedFile.name}`;
+                        // Sanitize filename to prevent path traversal and injection attacks
+                        const sanitizedName = selectedFile.name
+                            .replace(/[^a-zA-Z0-9.-]/g, '_')  // Replace special chars with underscore
+                            .replace(/\.+/g, '.')             // Replace multiple dots with single dot
+                            .replace(/^\.+|\.+$/g, '')        // Remove leading/trailing dots
+                            .substring(0, 100);               // Limit filename length
+                        const filename = `${timestamp}_${sanitizedName}`;
+                        
+                        // Double-check file type by reading file signature (magic numbers)
+                        const fileBuffer = await selectedFile.arrayBuffer();
+                        const bytes = new Uint8Array(fileBuffer.slice(0, 4));
+                        
+                        // Check file signatures for PDF and DOC files
+                        let isValidFile = false;
+                        if (bytes[0] === 0x25 && bytes[1] === 0x50 && bytes[2] === 0x44 && bytes[3] === 0x46) {
+                            // PDF signature: %PDF
+                            isValidFile = true;
+                        } else if (bytes[0] === 0x50 && bytes[1] === 0x4B) {
+                            // ZIP-based files (DOCX): PK
+                            isValidFile = true;
+                        } else if (bytes[0] === 0xD0 && bytes[1] === 0xCF && bytes[2] === 0x11 && bytes[3] === 0xE0) {
+                            // DOC signature
+                            isValidFile = true;
+                        }
+                        
+                        if (!isValidFile) {
+                            throw new Error('Invalid file type detected. Only PDF, DOC, and DOCX files are allowed.');
+                        }
                         
                         const { data: uploadData, error: uploadError } = await supabase.storage
                             .from('resumes')
@@ -431,24 +497,55 @@
                         resumeSize = selectedFile.size;
                     }
                     
-                    // Step 2: Save application data to database
+                    // Input sanitization function
+                    function sanitizeInput(input) {
+                        if (!input) return null;
+                        return input.toString()
+                            .trim()                           // Remove whitespace
+                            .replace(/<[^>]*>/g, '')         // Remove HTML tags
+                            .replace(/[<>'"&]/g, '')         // Remove dangerous characters
+                            .substring(0, 1000);             // Limit length
+                    }
+                    
+                    function sanitizeEmail(email) {
+                        if (!email) return null;
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        const sanitized = email.toString().trim().toLowerCase();
+                        return emailRegex.test(sanitized) ? sanitized : null;
+                    }
+                    
+                    function sanitizeUrl(url) {
+                        if (!url) return null;
+                        const urlRegex = /^https?:\/\/.+$/;
+                        const sanitized = url.toString().trim();
+                        return urlRegex.test(sanitized) ? sanitized : null;
+                    }
+                    
+                    // Step 2: Save application data to database (with sanitization)
                     const applicationData = {
-                        first_name: formData.get('firstName'),
-                        last_name: formData.get('lastName'),
-                        email: formData.get('email'),
-                        phone: formData.get('phone') || null,
-                        location: formData.get('location'),
-                        experience_level: formData.get('experience'),
-                        linkedin_url: formData.get('linkedin') || null,
-                        github_url: formData.get('github') || null,
-                        portfolio_url: formData.get('portfolio') || null,
-                        cover_letter: formData.get('coverLetter'),
-                        tech_experience: formData.get('techExperience') || null,
-                        availability: formData.get('availability') || null,
-                        resume_filename: resumeFilename,
+                        first_name: sanitizeInput(formData.get('firstName')),
+                        last_name: sanitizeInput(formData.get('lastName')),
+                        email: sanitizeEmail(formData.get('email')),
+                        phone: sanitizeInput(formData.get('phone')),
+                        location: sanitizeInput(formData.get('location')),
+                        experience_level: sanitizeInput(formData.get('experience')),
+                        linkedin_url: sanitizeUrl(formData.get('linkedin')),
+                        github_url: sanitizeUrl(formData.get('github')),
+                        portfolio_url: sanitizeUrl(formData.get('portfolio')),
+                        cover_letter: sanitizeInput(formData.get('coverLetter')),
+                        tech_experience: sanitizeInput(formData.get('techExperience')),
+                        availability: sanitizeInput(formData.get('availability')),
+                        resume_filename: sanitizeInput(resumeFilename),
                         resume_url: resumeUrl,
                         resume_size: resumeSize
                     };
+                    
+                    // Validate required fields
+                    if (!applicationData.first_name || !applicationData.last_name || 
+                        !applicationData.email || !applicationData.location || 
+                        !applicationData.experience_level || !applicationData.cover_letter) {
+                        throw new Error('Please fill in all required fields with valid data.');
+                    }
                     
                     const { data, error } = await supabase
                         .from('applications')
@@ -458,7 +555,8 @@
                         throw new Error('Failed to submit application: ' + error.message);
                     }
                     
-                    // Success!
+                    // Success! Record the attempt
+                    rateLimiter.recordAttempt();
                     alert('Thank you for your application! We\'ve received it and will review it within 5 business days. You should receive a confirmation email shortly.');
                     
                     // Reset form
