@@ -62,17 +62,17 @@ CREATE POLICY "Allow updates for authenticated users" ON applications
     USING (auth.role() = 'authenticated');
 
 -- Create storage bucket for resumes
-INSERT INTO storage.buckets (id, name, public) VALUES ('resumes', 'resumes', false);
+INSERT INTO storage.buckets (id, name, public) VALUES ('resumes', 'resumes', true);
 
 -- Storage policy: Allow anyone to upload resumes
 CREATE POLICY "Allow resume uploads" ON storage.objects
     FOR INSERT 
     WITH CHECK (bucket_id = 'resumes');
 
--- Storage policy: Allow authenticated users to view resumes
-CREATE POLICY "Allow authenticated users to view resumes" ON storage.objects
+-- Storage policy: Allow anyone to read uploaded resumes (since bucket is public)  
+CREATE POLICY "Allow public resume access" ON storage.objects
     FOR SELECT 
-    USING (bucket_id = 'resumes' AND auth.role() = 'authenticated');
+    USING (bucket_id = 'resumes');
 
 -- Optional: Create a view for easy application management
 CREATE VIEW application_summary AS

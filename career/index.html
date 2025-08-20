@@ -14,13 +14,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Careers - Datapace</title>
     <meta name="description" content="Join Datapace and help build the future of database performance optimization. We're looking for talented engineers to join our growing team.">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-    <link rel="manifest" href="assets/site.webmanifest">
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="careers/careers.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="manifest" href="../assets/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../careers/careers.css">
     
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -29,15 +29,15 @@
     <nav>
         <div class="container">
             <div class="nav-content">
-                <a href="index.html" class="logo" aria-label="datapace.ai Homepage">
-                    <img src="assets/logo.png" alt="Datapace Wave Logo">
+                <a href="../index.html" class="logo" aria-label="datapace.ai Homepage">
+                    <img src="../assets/logo.png" alt="Datapace Wave Logo">
                     <span class="logo-text">datapace</span>
                 </a>
                 <div class="nav-links">
-                    <a href="index.html#features">Features</a>
-                    <a href="index.html#how-it-works">How It Works</a>
-                    <a href="index.html#pricing">Pricing</a>
-                    <a href="index.html#faq">FAQ</a>
+                    <a href="../index.html#features">Features</a>
+                    <a href="../index.html#how-it-works">How It Works</a>
+                    <a href="../index.html#pricing">Pricing</a>
+                    <a href="../index.html#faq">FAQ</a>
                 </div>
                 <div class="nav-ctas">
                     <a href="https://app.datapace.ai" class="cta-button">Get Started</a>
@@ -271,8 +271,8 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-about footer-col">
-                     <a href="index.html" class="logo" aria-label="datapace.ai Homepage">
-						<img src="assets/logo.png" alt="Datapace Wave Logo">
+                     <a href="../index.html" class="logo" aria-label="datapace.ai Homepage">
+						<img src="../assets/logo.png" alt="Datapace Wave Logo">
                         <span class="logo-text">datapace</span>
 					</a>
                     <p>AI co-pilot that helps developers improve performance and cut cloud costs.</p>
@@ -280,23 +280,23 @@
                  <div class="footer-col">
                     <h4>Product</h4>
                     <ul>
-                        <li><a href="index.html#how-it-works">How It Works</a></li>
-                        <li><a href="index.html#features">Features</a></li>
-                        <li><a href="index.html#pricing">Pricing</a></li>
+                        <li><a href="../index.html#how-it-works">How It Works</a></li>
+                        <li><a href="../index.html#features">Features</a></li>
+                        <li><a href="../index.html#pricing">Pricing</a></li>
                     </ul>
                 </div>
                  <div class="footer-col">
                     <h4>About</h4>
                     <ul>
-                        <li><a href="blog/">Blog</a></li>
-                        <li><a href="careers.html" class="active">Careers</a></li>
+                        <li><a href="../blog/">Blog</a></li>
+                        <li><a href="../career/" class="active">Careers</a></li>
                     </ul>
                 </div>
                  <div class="footer-col">
                     <h4>Legal</h4>
                     <ul>
-                        <li><a href="index.html#" onclick="openModal('terms-modal')">Terms of Service</a></li>
-                        <li><a href="index.html#" onclick="openModal('privacy-modal')">Privacy Policy</a></li>
+                        <li><a href="../index.html#" onclick="openModal('terms-modal')">Terms of Service</a></li>
+                        <li><a href="../index.html#" onclick="openModal('privacy-modal')">Privacy Policy</a></li>
                     </ul>
                 </div>
             </div>
@@ -319,6 +319,21 @@
         
         // Initialize Supabase client
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Test Supabase connection
+        async function testSupabaseConnection() {
+            try {
+                const { data, error } = await supabase.from('applications').select('count').limit(1);
+                if (error) {
+                    console.error('Supabase connection test failed:', error);
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                console.error('Supabase connection test error:', error);
+                return false;
+            }
+        }
         
         // Smooth scroll to application form
         function scrollToApplication() {
@@ -383,6 +398,12 @@
                 submitButton.disabled = true;
                 
                 try {
+                    // Step 0: Test Supabase connection
+                    const connectionOk = await testSupabaseConnection();
+                    if (!connectionOk) {
+                        throw new Error('Unable to connect to database. Please try again later or contact hello@datapace.ai');
+                    }
+                    
                     // Step 1: Upload resume to Supabase Storage (if file selected)
                     let resumeUrl = null;
                     let resumeFilename = null;
@@ -448,7 +469,20 @@
                     
                 } catch (error) {
                     console.error('Submission error:', error);
-                    alert('Sorry, there was an error submitting your application. Please try again or contact us directly at careers@datapace.ai');
+                    
+                    // More specific error messages
+                    let errorMessage = 'Sorry, there was an error submitting your application.';
+                    
+                    if (error.message.includes('Failed to upload resume')) {
+                        errorMessage = 'There was an error uploading your resume. Please check your file and try again.';
+                    } else if (error.message.includes('Failed to submit application')) {
+                        errorMessage = 'There was an error saving your application. Please try again.';
+                    } else if (error.message.includes('storage')) {
+                        errorMessage = 'There was an error with file storage. Please try again or contact us at hello@datapace.ai';
+                    }
+                    
+                    errorMessage += '\n\nError details: ' + error.message;
+                    alert(errorMessage);
                 } finally {
                     // Reset button state
                     submitButton.innerHTML = `
