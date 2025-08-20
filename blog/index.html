@@ -292,10 +292,14 @@
                     noResultsDiv = document.createElement('div');
                     noResultsDiv.id = 'noResults';
                     noResultsDiv.className = 'no-results';
-                    noResultsDiv.innerHTML = `
-                        <h3>No articles found</h3>
-                        <p>Try adjusting your search terms or selecting a different category.</p>
-                    `;
+                    // Use textContent instead of innerHTML for security
+                    const heading = document.createElement('h3');
+                    heading.textContent = 'No articles found';
+                    const paragraph = document.createElement('p');
+                    paragraph.textContent = 'Try adjusting your search terms or selecting a different category.';
+                    
+                    noResultsDiv.appendChild(heading);
+                    noResultsDiv.appendChild(paragraph);
                     blogGrid.appendChild(noResultsDiv);
                 } else if (!show && noResultsDiv) {
                     noResultsDiv.remove();

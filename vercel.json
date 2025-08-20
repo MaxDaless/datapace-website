@@ -1,4 +1,14 @@
 {
+  "git": {
+    "deploymentEnabled": {
+      "production": true,
+      "preview": true
+    }
+  },
+  "github": {
+    "enabled": true,
+    "autoAlias": true
+  },
   "headers": [
     {
       "source": "/(.*)",

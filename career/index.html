@@ -12,6 +12,13 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Security Headers (GitHub Pages fallback) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; frame-src 'none'; connect-src 'self' https://srggfllxshgobksljwcn.supabase.co https://www.google-analytics.com; object-src 'none'; base-uri 'self';">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <title>Careers - Datapace</title>
     <meta name="description" content="Join Datapace and help build the future of database performance optimization. We're looking for talented engineers to join our growing team.">
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
@@ -315,7 +322,7 @@
     <script>
         // Supabase Configuration
         const SUPABASE_URL = 'https://srggfllxshgobksljwcn.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZ2dmbGx4c2hnb2Jrc2xqd2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2NTE0MDYsImV4cCI6MjA3MTIyNzQwNn0.n4YMzhPqH27SMBLgUOcXGMmofhqewEUtPMopFl3c_T8';
+        const SUPABASE_ANON_KEY = 'sb_publishable_QAh2cf6Mnq_OOFuTbAquCQ_quRb_C73';
         
         // Initialize Supabase client
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
