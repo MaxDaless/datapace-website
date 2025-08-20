@@ -1066,6 +1066,11 @@ nav.scrolled {
 
 .metric {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 4rem; /* Ensure consistent height */
 }
 
 .metric-number {
@@ -1073,15 +1078,19 @@ nav.scrolled {
     font-size: var(--text-xl);
     font-weight: 800;
     color: var(--primary-color);
-    line-height: 1;
+    line-height: 1.2;
     margin-bottom: var(--space-xs);
+    white-space: nowrap; /* Prevent number from wrapping */
 }
 
 .metric-label {
     font-size: var(--text-xs);
     color: var(--light-text);
     font-weight: 500;
-    line-height: 1.4;
+    line-height: 1.3;
+    text-align: center;
+    max-width: 100%;
+    hyphens: auto; /* Allow hyphenation for longer labels */
 }
 
 /* Progressive Disclosure for Use Cases */
