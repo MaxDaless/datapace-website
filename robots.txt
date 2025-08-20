@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Important pages
+Allow: /blog/
+Allow: /career/
+
+# Block sensitive areas
+Disallow: /assets/
+Disallow: /.vercel/
+Disallow: /careers/
+
+# Sitemaps
+Sitemap: https://www.datapace.ai/sitemap.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1

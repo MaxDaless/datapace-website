@@ -39,10 +39,18 @@
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://datapace.ai/">
+    <meta property="twitter:url" content="https://www.datapace.ai/">
     <meta property="twitter:title" content="Datapace.ai - AI Co-pilot for Database Performance">
     <meta property="twitter:description" content="AI co-pilot that helps developers improve performance and cut cloud costs by turning complex database diagnostics into clear, actionable fixes.">
-    <meta property="twitter:image" content="https://datapace.ai/assets/og-image.jpg">
+    <meta property="twitter:image" content="https://www.datapace.ai/assets/og-image.jpg">
+    <meta property="twitter:site" content="@datapace_">
+    <meta property="twitter:creator" content="@datapace_">
+    
+    <!-- Additional Social Meta -->
+    <meta property="article:author" content="Datapace Team">
+    <meta property="article:publisher" content="https://www.linkedin.com/company/datapaceai/">
+    <link rel="canonical" href="https://www.datapace.ai/">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
@@ -51,13 +59,28 @@
     <link rel="manifest" href="assets/site.webmanifest">
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     
-    <!-- Local fonts for better performance and security -->
+    <!-- Preload critical resources -->
     <link rel="preload" href="assets/inter-fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="assets/inter-fonts.css"></noscript>
+    <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/logo.png" as="image">
     
-    <!-- Critical CSS -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="blog.css">
+    <!-- Critical CSS inline for FCP -->
+    <style>
+        body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.6;color:#334155}
+        .container{max-width:1200px;margin:0 auto;padding:0 1rem}
+        nav{background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:100}
+        .nav-content{display:flex;align-items:center;justify-content:space-between;padding:1rem 0}
+        .logo{display:flex;align-items:center;text-decoration:none;color:#00C9A7;font-weight:700}
+        .cta-button{background:#00C9A7;color:#fff;padding:0.75rem 1.5rem;border-radius:0.5rem;text-decoration:none;font-weight:600;transition:background 0.2s}
+        .cta-button:hover{background:#00B396}
+    </style>
+    
+    <!-- Non-critical CSS -->
+    <noscript>
+        <link rel="stylesheet" href="assets/inter-fonts.css">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="blog.css">
+    </noscript>
     
     <!-- Schema.org markup -->
     <script type="application/ld+json">
@@ -348,7 +371,7 @@
                             "Been using the beta for 3 months. Finally found the slow queries killing our checkout flow. The index suggestions actually worked and cut our p95 response time in half."
                         </blockquote>
                         <div class="testimonial-author">
-                            <img src="assets/testimonial-alex.jpg" alt="Alex Chen" loading="lazy" width="50" height="50">
+                            <img src="assets/testimonial-alex.jpg" alt="Alex Chen" loading="lazy" width="50" height="50" decoding="async">
                             <div class="author-info">
                                 <strong>Alex Chen</strong>
                                 <span>Tech Lead, Mercury Bank</span>
@@ -364,7 +387,7 @@
                             "Honestly didn't expect much from another DB tool, but this actually helped. Found some missing indexes on our orders table that were costing us $3k/month in unnecessary compute."
                         </blockquote>
                         <div class="testimonial-author">
-                            <img src="assets/testimonial-sarah.jpg" alt="Sarah Martinez" loading="lazy" width="50" height="50">
+                            <img src="assets/testimonial-sarah.jpg" alt="Sarah Martinez" loading="lazy" width="50" height="50" decoding="async">
                             <div class="author-info">
                                 <strong>Sarah Martinez</strong>
                                 <span>Software Engineer, Gumroad</span>
@@ -380,7 +403,7 @@
                             "Way better than staring at DataDog dashboards trying to figure out what's wrong. Just tells you 'add this index' or 'rewrite this query'. Saved me hours of debugging."
                         </blockquote>
                         <div class="testimonial-author">
-                            <img src="assets/testimonial-mike.jpg" alt="Mike Rodriguez" loading="lazy" width="50" height="50">
+                            <img src="assets/testimonial-mike.jpg" alt="Mike Rodriguez" loading="lazy" width="50" height="50" decoding="async">
                             <div class="author-info">
                                 <strong>Mike Rodriguez</strong>
                                 <span>Senior Developer, Linear</span>
