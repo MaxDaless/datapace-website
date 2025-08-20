@@ -44,6 +44,9 @@ CREATE INDEX idx_applications_email ON applications(email);
 CREATE INDEX idx_applications_created_at ON applications(created_at DESC);
 CREATE INDEX idx_applications_status ON applications(status);
 
+-- Add waiting_list column to existing table (run this if table already exists)
+ALTER TABLE applications ADD COLUMN IF NOT EXISTS waiting_list BOOLEAN DEFAULT FALSE;
+
 -- Row Level Security (RLS) policies
 ALTER TABLE applications ENABLE ROW LEVEL SECURITY;
 
@@ -85,6 +88,7 @@ SELECT
     location,
     experience_level,
     status,
+    waiting_list,
     CASE 
         WHEN resume_url IS NOT NULL THEN 'Yes'
         ELSE 'No'
