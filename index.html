@@ -750,7 +750,7 @@
                             </div>
                             <div></div>
                             <div id="sib-container" class="sib-container--large sib-container--vertical" style="text-align:center; background-color:rgba(255,255,255,1); max-width:540px; border-radius:3px; border-width:1px; border-color:#C0CCD9; border-style:solid; direction:ltr">
-                              <form id="sib-form" method="POST" action="https://e6a0e3af.sibforms.com/serve/MUIFAMXoC7yiwyQ-TcusPa3JdrWsSPLmg7ruYff0YPGFytEHmwSQ9zW6Z5n-5Phq01At9bgUxsc5WFi8AsFctnQVHg6Eu55OSSvhGvG3EFF3xB51fNgHQ-r-zarDzNDv3v2RauzALN0CCzueSWcNSQA22ghH7kRO-1Db1hxOVJkfEiqZK-rqNsf7tlm2GLla678BejmJexr1TH7x" data-type="subscription">
+                              <form id="sib-form" method="POST" action="https://e6a0e3af.sibforms.com/serve/MUIFAMXoC7yiwyQ-TcusPa3JdrWsSPLmg7ruYff0YPGFytEHmwSQ9zW6Z5n-5Phq01At9bgUxsc5WFi8AsFctnQVHg6Eu55OSSvhGvG3EFF3xB51fNgHQ-r-zarDzNDv3v2RauzALN0CCzueSWcNSQA22ghH7kRO-1Db1hxOVJkfEiqZK-rqNsf7tlm2GLla678BejmJexr1TH7x" data-type="subscription" target="hidden-iframe">
                                 <div style="padding: 8px 0;">
                                   <div class="sib-input sib-form-block">
                                     <div class="form__entry entry_block">
@@ -808,7 +808,7 @@
                                 </div>
                                 <div style="padding: 8px 0;">
                                   <div class="sib-form-block" style="text-align: center">
-                                    <button class="sib-form-block__button sib-form-block__button-with-loader" style="font-size:16px; text-align:center; font-weight:700; font-family:Helvetica, sans-serif; color:#FFFFFF; background-color:#3E4857; border-radius:3px; border-width:0px;" type="button">
+                                    <button class="sib-form-block__button sib-form-block__button-with-loader" style="font-size:16px; text-align:center; font-weight:700; font-family:Helvetica, sans-serif; color:#FFFFFF; background-color:#3E4857; border-radius:3px; border-width:0px;" form="sib-form" type="submit">
                                       <svg class="icon clickable__icon progress-indicator__icon sib-hide-loader-icon" viewBox="0 0 512 512" style="display:none;">
                                         <path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z" />
                                       </svg>
@@ -823,6 +823,9 @@
                           </div>
                         </div>
                         <!-- End Brevo Form -->
+                        
+                        <!-- Hidden iframe to prevent redirect -->
+                        <iframe name="hidden-iframe" style="display:none;"></iframe>
                     </div>
                 </div>
             </div>
@@ -1273,124 +1276,33 @@
         var AUTOHIDE = Boolean(0);
     </script>
     
+    <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
     <script src="https://www.google.com/recaptcha/api.js?render=6LfX-YIrAAAAANee0xq8DpIkuP8rARI8u6a6y8o6&hl=en" async defer></script>
     
     <script>
-        // Complete custom form handling without Brevo main.js to prevent redirects
+        // Simple approach: let Brevo handle submission to iframe, then show success
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('sib-form');
             const formContainer = document.getElementById('sib-container');
             const successMessage = document.getElementById('success-message');
-            const submitButton = form.querySelector('.sib-form-block__button');
             
-            if (form && submitButton) {
-                // Prevent any default form submission behavior
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                });
-                
-                // Prevent Enter key from submitting the form
-                form.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        // Trigger our custom submit instead
-                        submitButton.click();
-                        return false;
-                    }
-                });
-                
-                // Handle button click directly
-                submitButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Custom submit handler triggered');
-                    
-                    // Validate form fields
-                    const firstName = form.querySelector('[name="FIRSTNAME"]').value.trim();
-                    const lastName = form.querySelector('[name="LASTNAME"]').value.trim();
-                    const email = form.querySelector('[name="EMAIL"]').value.trim();
-                    const jobTitle = form.querySelector('[name="JOB_TITLE"]').value.trim();
-                    
-                    if (!firstName) {
-                        showError('Please enter your first name');
-                        return;
-                    }
-                    if (!lastName) {
-                        showError('Please enter your last name');
-                        return;
-                    }
-                    if (!email || !isValidEmail(email)) {
-                        showError('Please enter a valid email address');
-                        return;
-                    }
-                    if (!jobTitle) {
-                        showError('Please enter your job title');
-                        return;
-                    }
-                    
-                    // Execute reCAPTCHA then submit
-                    if (window.grecaptcha) {
-                        window.grecaptcha.execute('6LfX-YIrAAAAANee0xq8DpIkuP8rARI8u6a6y8o6', {action: 'submit'})
-                            .then(function(token) {
-                                submitForm(token);
+            if (form) {
+                form.addEventListener('submit', function() {
+                    // Wait a moment for form to submit to iframe, then show success
+                    setTimeout(function() {
+                        if (formContainer) formContainer.style.display = 'none';
+                        if (successMessage) {
+                            successMessage.style.display = 'block';
+                            successMessage.scrollIntoView({ behavior: 'smooth' });
+                        }
+                        
+                        if (window.gtag) {
+                            window.gtag('event', 'form_submit_success', {
+                                event_category: 'waitlist_form'
                             });
-                    } else {
-                        // Fallback without reCAPTCHA
-                        submitForm('');
-                    }
+                        }
+                    }, 1000);
                 });
-            }
-            
-            function submitForm(recaptchaToken) {
-                // Show loading state
-                if (submitButton) {
-                    submitButton.disabled = true;
-                    submitButton.innerHTML = '<span>Submitting...</span>';
-                }
-                
-                // Prepare form data
-                const formData = new FormData(form);
-                if (recaptchaToken) {
-                    formData.append('g-recaptcha-response', recaptchaToken);
-                }
-                
-                // Submit using XMLHttpRequest for maximum compatibility
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', form.action, true);
-                
-                xhr.onload = xhr.onerror = function() {
-                    // Always show success since we can't read cross-origin response
-                    // The data should still reach Brevo even if we get a CORS error
-                    showSuccess();
-                };
-                
-                xhr.send(formData);
-            }
-            
-            function isValidEmail(email) {
-                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return re.test(email);
-            }
-            
-            function showError(message) {
-                alert(message); // Simple error display for now
-            }
-            
-            function showSuccess() {
-                if (formContainer) formContainer.style.display = 'none';
-                if (successMessage) {
-                    successMessage.style.display = 'block';
-                    successMessage.scrollIntoView({ behavior: 'smooth' });
-                }
-                
-                // Analytics tracking
-                if (window.gtag) {
-                    window.gtag('event', 'form_submit_success', {
-                        event_category: 'waitlist_form'
-                    });
-                }
             }
         });
     </script>
