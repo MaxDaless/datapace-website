@@ -749,11 +749,8 @@
                               </div>
                             </div>
                             <div></div>
-                            <!-- Hidden iframe for form submission -->
-                            <iframe name="hidden-brevo-frame" style="display: none;"></iframe>
-                            
                             <div id="sib-container" class="sib-container--large sib-container--vertical" style="text-align:center; background-color:rgba(255,255,255,1); max-width:540px; border-radius:3px; border-width:1px; border-color:#C0CCD9; border-style:solid; direction:ltr">
-                              <form id="sib-form" method="POST" action="https://e6a0e3af.sibforms.com/serve/MUIFAMXoC7yiwyQ-TcusPa3JdrWsSPLmg7ruYff0YPGFytEHmwSQ9zW6Z5n-5Phq01At9bgUxsc5WFi8AsFctnQVHg6Eu55OSSvhGvG3EFF3xB51fNgHQ-r-zarDzNDv3v2RauzALN0CCzueSWcNSQA22ghH7kRO-1Db1hxOVJkfEiqZK-rqNsf7tlm2GLla678BejmJexr1TH7x" data-type="subscription" target="hidden-brevo-frame">
+                              <form id="sib-form" method="POST" action="https://e6a0e3af.sibforms.com/serve/MUIFAMXoC7yiwyQ-TcusPa3JdrWsSPLmg7ruYff0YPGFytEHmwSQ9zW6Z5n-5Phq01At9bgUxsc5WFi8AsFctnQVHg6Eu55OSSvhGvG3EFF3xB51fNgHQ-r-zarDzNDv3v2RauzALN0CCzueSWcNSQA22ghH7kRO-1Db1hxOVJkfEiqZK-rqNsf7tlm2GLla678BejmJexr1TH7x" data-type="subscription">
                                 <div style="padding: 8px 0;">
                                   <div class="sib-input sib-form-block">
                                     <div class="form__entry entry_block">
@@ -1282,29 +1279,64 @@
     <script src="https://www.google.com/recaptcha/api.js?render=6LfX-YIrAAAAANee0xq8DpIkuP8rARI8u6a6y8o6&hl=en" async defer></script>
     
     <script>
-        // Simple success message handler - let Brevo do everything else
+        // Intercept page redirect after successful Brevo submission
+        let formSubmitted = false;
+        
+        // Override window location changes to prevent redirect
+        const originalReplace = window.location.replace;
+        const originalAssign = window.location.assign;
+        
+        window.location.replace = function(url) {
+            if (formSubmitted && (url.includes('brevo') || url.includes('sendinblue') || url.includes('sib'))) {
+                showSuccessMessage();
+                return;
+            }
+            originalReplace.call(window.location, url);
+        };
+        
+        window.location.assign = function(url) {
+            if (formSubmitted && (url.includes('brevo') || url.includes('sendinblue') || url.includes('sib'))) {
+                showSuccessMessage();
+                return;
+            }
+            originalAssign.call(window.location, url);
+        };
+        
+        // Also intercept direct location changes
+        let originalLocation = window.location.href;
+        setInterval(() => {
+            if (formSubmitted && window.location.href !== originalLocation) {
+                if (window.location.href.includes('brevo') || window.location.href.includes('sendinblue') || window.location.href.includes('sib')) {
+                    history.back();
+                    showSuccessMessage();
+                }
+            }
+        }, 100);
+        
+        function showSuccessMessage() {
+            const formContainer = document.getElementById('sib-container');
+            const successMessage = document.getElementById('success-message');
+            
+            if (formContainer) formContainer.style.display = 'none';
+            if (successMessage) {
+                successMessage.style.display = 'block';
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            if (window.gtag) {
+                window.gtag('event', 'form_submit_success', {
+                    event_category: 'waitlist_form'
+                });
+            }
+            
+            formSubmitted = false;
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('sib-form');
-            const successMessage = document.getElementById('success-message');
-            const formContainer = document.getElementById('sib-container');
-            
             if (form) {
                 form.addEventListener('submit', function() {
-                    // Show success message after form submits
-                    setTimeout(() => {
-                        if (formContainer) formContainer.style.display = 'none';
-                        if (successMessage) {
-                            successMessage.style.display = 'block';
-                            successMessage.scrollIntoView({ behavior: 'smooth' });
-                        }
-                        
-                        // Track success
-                        if (window.gtag) {
-                            window.gtag('event', 'form_submit_success', {
-                                event_category: 'waitlist_form'
-                            });
-                        }
-                    }, 2000);
+                    formSubmitted = true;
                 });
             }
         });
