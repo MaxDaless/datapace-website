@@ -808,6 +808,8 @@
                                                   📧 Questions? Contact us at <a href="mailto:hello@datapace.ai">hello@datapace.ai</a>
                                                   <br>
                                                   📱 Follow us on <a href="https://www.linkedin.com/company/datapaceai/" target="_blank" rel="noopener">LinkedIn</a> for updates
+                                                  <br><br>
+                                                  <button id="reset-form-btn" style="background: #00C9A7; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">Add Another Person</button>
                                               </span>
                               </div>
                             </div>
@@ -1354,6 +1356,28 @@
             if (errorMessage) errorMessage.style.display = 'none';
             if (successMessage) successMessage.style.display = 'none';
             
+            // Add reset form functionality
+            const resetButton = document.getElementById('reset-form-btn');
+            if (resetButton) {
+                resetButton.addEventListener('click', function() {
+                    // Hide success message
+                    if (successMessage) successMessage.style.display = 'none';
+                    if (errorMessage) errorMessage.style.display = 'none';
+                    
+                    // Show form again
+                    const formContainer = document.getElementById('sib-container');
+                    if (formContainer) {
+                        formContainer.style.display = 'block';
+                    }
+                    
+                    // Reset form fields
+                    const form = document.getElementById('sib-form');
+                    if (form) {
+                        form.reset();
+                    }
+                });
+            }
+            
             // Handle form submission to prevent redirect
             const form = document.getElementById('sib-form');
             if (form) {
@@ -1392,6 +1416,12 @@
                             credentials: 'omit'
                         })
                         .then(() => {
+                            // Hide form fields
+                            const formContainer = document.getElementById('sib-container');
+                            if (formContainer) {
+                                formContainer.style.display = 'none';
+                            }
+                            
                             // Show success message
                             if (errorMessage) errorMessage.style.display = 'none';
                             if (successMessage) {
@@ -1399,7 +1429,7 @@
                                 successMessage.scrollIntoView({ behavior: 'smooth' });
                             }
                             
-                            // Reset form
+                            // Reset form (but keep it hidden)
                             form.reset();
                         })
                         .catch(() => {
@@ -1414,6 +1444,12 @@
                             
                             // Show success message after delay
                             setTimeout(() => {
+                                // Hide form fields
+                                const formContainer = document.getElementById('sib-container');
+                                if (formContainer) {
+                                    formContainer.style.display = 'none';
+                                }
+                                
                                 if (errorMessage) errorMessage.style.display = 'none';
                                 if (successMessage) {
                                     successMessage.style.display = 'block';
