@@ -715,7 +715,7 @@
                             </div>
                             <div></div>
                             <div id="sib-container" class="sib-container--large sib-container--vertical" style="text-align:center; background-color:rgba(255,255,255,1); max-width:540px; border-radius:3px; border-width:1px; border-color:#C0CCD9; border-style:solid; direction:ltr">
-                              <form id="sib-form" method="POST" action="https://e6a0e3af.sibforms.com/serve/MUIFAMXoC7yiwyQ-TcusPa3JdrWsSPLmg7ruYff0YPGFytEHmwSQ9zW6Z5n-5Phq01At9bgUxsc5WFi8AsFctnQVHg6Eu55OSSvhGvG3EFF3xB51fNgHQ-r-zarDzNDv3v2RauzALN0CCzueSWcNSQA22ghH7kRO-1Db1hxOVJkfEiqZK-rqNsf7tlm2GLla678BejmJexr1TH7x" data-type="subscription">
+                              <form id="sib-form" method="POST" action="https://e6a0e3af.sibforms.com/serve/MUIFAMXoC7yiwyQ-TcusPa3JdrWsSPLmg7ruYff0YPGFytEHmwSQ9zW6Z5n-5Phq01At9bgUxsc5WFi8AsFctnQVHg6Eu55OSSvhGvG3EFF3xB51fNgHQ-r-zarDzNDv3v2RauzALN0CCzueSWcNSQA22ghH7kRO-1Db1hxOVJkfEiqZK-rqNsf7tlm2GLla678BejmJexr1TH7x" data-type="subscription" target="_self">
                                 <div style="padding: 8px 0;">
                                   <div class="sib-input sib-form-block">
                                     <div class="form__entry entry_block">
@@ -1258,6 +1258,43 @@
             const successMessage = document.getElementById('success-message');
             if (errorMessage) errorMessage.style.display = 'none';
             if (successMessage) successMessage.style.display = 'none';
+            
+            // Handle form submission to prevent redirect
+            const form = document.getElementById('sib-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = new FormData(form);
+                    
+                    // Submit via fetch to prevent redirect
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        mode: 'no-cors' // Important for cross-origin requests
+                    })
+                    .then(() => {
+                        // Show success message
+                        if (errorMessage) errorMessage.style.display = 'none';
+                        if (successMessage) {
+                            successMessage.style.display = 'block';
+                            successMessage.scrollIntoView({ behavior: 'smooth' });
+                        }
+                        
+                        // Reset form
+                        form.reset();
+                    })
+                    .catch(() => {
+                        // Show error message
+                        if (successMessage) successMessage.style.display = 'none';
+                        if (errorMessage) {
+                            errorMessage.style.display = 'block';
+                            errorMessage.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    });
+                });
+            }
         });
     </script>
 </body>
