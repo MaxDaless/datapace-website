@@ -167,16 +167,34 @@
         
         /* Override Brevo button styles to match site design */
         .sib-form-block__button {
-            background: var(--accent-gradient) !important;
-            border-radius: var(--radius-md) !important;
-            padding: 12px 24px !important;
+            background: linear-gradient(135deg, #00C9A7 0%, #4EDDCE 100%) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 16px 32px !important;
+            font-size: 16px !important;
             font-weight: 600 !important;
+            font-family: inherit !important;
+            cursor: pointer !important;
             transition: all 0.2s ease !important;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+            width: 100% !important;
+            max-width: 200px !important;
+            margin: 16px auto !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
         }
         
         .sib-form-block__button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md) !important;
+            background: linear-gradient(135deg, #00B396 0%, #00C9A7 100%) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+        }
+        
+        .sib-form-block__button:active {
+            transform: translateY(0) !important;
         }
         
         /* Ensure form inputs work properly */
@@ -201,6 +219,12 @@
         /* Hide honeypot field properly */
         .input--hidden {
             display: none !important;
+        }
+        
+        /* Loading spinner animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
     <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
@@ -1265,34 +1289,77 @@
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
+                    // Show loading state
+                    const submitBtn = form.querySelector('.sib-form-block__button');
+                    const originalText = submitBtn.innerHTML;
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<div style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite;"></div>';
+                        submitBtn.disabled = true;
+                    }
+                    
                     // Get form data
                     const formData = new FormData(form);
                     
-                    // Submit via fetch to prevent redirect
-                    fetch(form.action, {
-                        method: 'POST',
-                        body: formData,
-                        mode: 'no-cors' // Important for cross-origin requests
-                    })
-                    .then(() => {
-                        // Show success message
-                        if (errorMessage) errorMessage.style.display = 'none';
-                        if (successMessage) {
-                            successMessage.style.display = 'block';
-                            successMessage.scrollIntoView({ behavior: 'smooth' });
-                        }
-                        
-                        // Reset form
-                        form.reset();
-                    })
-                    .catch(() => {
-                        // Show error message
-                        if (successMessage) successMessage.style.display = 'none';
-                        if (errorMessage) {
-                            errorMessage.style.display = 'block';
-                            errorMessage.scrollIntoView({ behavior: 'smooth' });
-                        }
-                    });
+                    // Add reCAPTCHA token if available
+                    if (window.grecaptcha && window.grecaptcha.ready) {
+                        window.grecaptcha.ready(function() {
+                            window.grecaptcha.execute('6LfX-YIrAAAAANee0xq8DpIkuP8rARI8u6a6y8o6', {action: 'submit'}).then(function(token) {
+                                formData.set('g-recaptcha-response', token);
+                                submitForm(formData);
+                            });
+                        });
+                    } else {
+                        submitForm(formData);
+                    }
+                    
+                    function submitForm(data) {
+                        // Try fetch first, fallback to form submission
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: data,
+                            mode: 'no-cors',
+                            credentials: 'omit'
+                        })
+                        .then(() => {
+                            // Show success message
+                            if (errorMessage) errorMessage.style.display = 'none';
+                            if (successMessage) {
+                                successMessage.style.display = 'block';
+                                successMessage.scrollIntoView({ behavior: 'smooth' });
+                            }
+                            
+                            // Reset form
+                            form.reset();
+                        })
+                        .catch(() => {
+                            // Fallback: Let Brevo handle it in an iframe or popup
+                            const iframe = document.createElement('iframe');
+                            iframe.style.display = 'none';
+                            iframe.name = 'brevo-submit';
+                            document.body.appendChild(iframe);
+                            
+                            form.target = 'brevo-submit';
+                            form.submit();
+                            
+                            // Show success message after delay
+                            setTimeout(() => {
+                                if (errorMessage) errorMessage.style.display = 'none';
+                                if (successMessage) {
+                                    successMessage.style.display = 'block';
+                                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                                }
+                                form.reset();
+                                document.body.removeChild(iframe);
+                            }, 2000);
+                        })
+                        .finally(() => {
+                            // Restore button
+                            if (submitBtn) {
+                                submitBtn.innerHTML = originalText;
+                                submitBtn.disabled = false;
+                            }
+                        });
+                    }
                 });
             }
         });
