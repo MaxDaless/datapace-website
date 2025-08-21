@@ -230,13 +230,14 @@
     </style>
     <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
     
-    <!-- Preload critical resources -->
-    <link rel="preload" href="assets/inter-fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- Load CSS directly and synchronously to prevent FOUC -->
+    <link rel="stylesheet" href="assets/inter-fonts.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="preload" href="assets/logo.png" as="image">
     
-    <!-- Critical CSS inline for FCP -->
+    <!-- Critical CSS inline for immediate styling -->
     <style>
+        /* Ensure everything renders properly from the start */
         body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.6;color:#334155}
         .container{max-width:1200px;margin:0 auto;padding:0 1rem}
         nav{background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:100}
@@ -244,18 +245,19 @@
         .logo{display:flex;align-items:center;text-decoration:none;color:#00C9A7;font-weight:700}
         .cta-button{background:#00C9A7;color:#fff;padding:0.75rem 1.5rem;border-radius:0.5rem;text-decoration:none;font-weight:600;transition:background 0.2s}
         .cta-button:hover{background:#00B396}
-        /* FOUC prevention */
+        
+        /* Form styling to prevent layout shifts */
         .signup-form-container{max-width:600px;margin:0 auto}
         .sib-form{max-width:540px;margin:0 auto;background:#EFF2F7;border-radius:16px;padding:24px}
         #sib-container{max-width:500px;margin:0 auto;background:white;border:1px solid #e2e8f0;border-radius:12px;padding:24px;box-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1)}
+        .input{padding:12px 16px;border:2px solid #d1d5db;border-radius:8px;font-size:16px;font-family:inherit;width:100%;box-sizing:border-box;transition:all 0.2s ease}
+        .input:focus{outline:none;border-color:#00C9A7;box-shadow:0 0 0 3px rgba(0,201,167,0.1)}
+        .sib-form-block__button{background:linear-gradient(135deg,#00C9A7 0%,#4EDDCE 100%);color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;padding:16px 24px;display:flex;align-items:center;justify-content:center;width:100%;max-width:200px;margin:0 auto;box-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1);transition:all 0.2s ease}
+        .sib-form-block__button:hover{background:linear-gradient(135deg,#00B396 0%,#00C9A7 100%);transform:translateY(-2px)}
+        .sib-form-message-panel{display:none;margin:0 auto 16px;padding:16px;border-radius:12px;box-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1)}
+        .sib-icon{width:24px;height:24px}
+        .input--hidden{display:none}
     </style>
-    
-    <!-- Non-critical CSS -->
-    <noscript>
-        <link rel="stylesheet" href="assets/inter-fonts.css">
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="blog.css">
-    </noscript>
     
     <!-- Schema.org markup -->
     <script type="application/ld+json">
