@@ -187,6 +187,36 @@
             font-size: 14px !important;
             line-height: 1.5 !important;
             flex: 1 !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            max-width: 100% !important;
+        }
+        
+        /* Fix success message links */
+        .sib-form-message-panel__inner-text a {
+            color: #00C9A7 !important;
+            text-decoration: none !important;
+            font-weight: 600 !important;
+        }
+        
+        .sib-form-message-panel__inner-text a:hover {
+            text-decoration: underline !important;
+        }
+        
+        /* Prevent form container from expanding */
+        .signup-form-container {
+            max-width: 600px !important;
+            overflow: hidden !important;
+        }
+        
+        .signup-form-container .sib-form {
+            max-width: 540px !important;
+            box-sizing: border-box !important;
+        }
+        
+        .signup-form-container #sib-container {
+            max-width: 500px !important;
+            box-sizing: border-box !important;
         }
         
         /* Override Brevo button styles to match site design */
@@ -773,7 +803,11 @@
                                   <path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 464c-118.664 0-216-96.055-216-216 0-118.663 96.055-216 216-216 118.664 0 216 96.055 216 216 0 118.663-96.055 216-216 216zm141.63-274.961L217.15 376.071c-4.705 4.667-12.303 4.637-16.97-.068l-85.878-86.572c-4.667-4.705-4.637-12.303.068-16.97l8.52-8.451c4.705-4.667 12.303-4.637 16.97.068l68.976 69.533 163.441-162.13c4.705-4.667 12.303-4.637 16.97.068l8.451 8.52c4.668 4.705 4.637 12.303-.068 16.97z" />
                                 </svg>
                                 <span class="sib-form-message-panel__inner-text">
-                                                  We confirm you're well on the waiting list, do not hesitate to reach out via hello@datapace.ai or follow our progress via our Linkedin page https://www.linkedin.com/company/datapaceai/
+                                                  🎉 You're on the waitlist! We'll notify you when Datapace launches. 
+                                                  <br><br>
+                                                  📧 Questions? Contact us at <a href="mailto:hello@datapace.ai">hello@datapace.ai</a>
+                                                  <br>
+                                                  📱 Follow us on <a href="https://www.linkedin.com/company/datapaceai/" target="_blank" rel="noopener">LinkedIn</a> for updates
                                               </span>
                               </div>
                             </div>
