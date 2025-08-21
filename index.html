@@ -297,22 +297,16 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Prevent FOUC - hide form initially */
+        /* Fix FOUC by ensuring proper sizing from start */
         .sib-form {
-            opacity: 0 !important;
-            transition: opacity 0.3s ease !important;
+            visibility: hidden !important;
         }
         
-        .sib-form.loaded {
-            opacity: 1 !important;
-        }
-        
-        /* Hide large icons during initial load */
-        .sib-form-message-panel:not(.loaded) .sib-icon {
-            display: none !important;
+        .sib-form.styles-loaded {
+            visibility: visible !important;
         }
     </style>
-    <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css" onload="if(document.querySelector('.sib-form')){document.querySelector('.sib-form').classList.add('loaded');}">
+    <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css" onload="if(document.querySelector('.sib-form')){document.querySelector('.sib-form').classList.add('styles-loaded');}">
     
     <!-- Preload critical resources -->
     <link rel="preload" href="assets/inter-fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -798,12 +792,6 @@
                     </div>
                     
                     <div class="signup-form-container" id="signup-form">
-                        <!-- Loading placeholder -->
-                        <div id="form-loading" style="text-align: center; padding: 40px; background: #EFF2F7; border-radius: 12px; color: #666;">
-                            <div style="width: 40px; height: 40px; margin: 0 auto 16px; border: 3px solid #e0e0e0; border-top: 3px solid #00C9A7; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                            <p>Loading waitlist form...</p>
-                        </div>
-                        
                         <!-- Brevo Form -->
                         <div class="sib-form" style="text-align: center; background-color: #EFF2F7; border-radius: 12px; padding: 20px;">
                           <div id="sib-form-container" class="sib-form-container">
@@ -1365,38 +1353,19 @@
     <script>
         // Ensure proper loading order
         document.addEventListener('DOMContentLoaded', function() {
-            // Show form after a brief delay to ensure styles are loaded
-            setTimeout(() => {
-                const brevoForm = document.querySelector('.sib-form');
-                const loadingDiv = document.getElementById('form-loading');
-                if (brevoForm) {
-                    brevoForm.classList.add('loaded');
-                }
-                if (loadingDiv) {
-                    loadingDiv.style.display = 'none';
-                }
-            }, 100);
-            
             // Create and load the Brevo script
             const brevoScript = document.createElement('script');
             brevoScript.src = 'https://sibforms.com/forms/end-form/build/main.js';
             brevoScript.defer = true;
-            
-            // Show form when script loads
-            brevoScript.onload = function() {
-                setTimeout(() => {
-                    const brevoForm = document.querySelector('.sib-form');
-                    const loadingDiv = document.getElementById('form-loading');
-                    if (brevoForm) {
-                        brevoForm.classList.add('loaded');
-                    }
-                    if (loadingDiv) {
-                        loadingDiv.style.display = 'none';
-                    }
-                }, 50);
-            };
-            
             document.head.appendChild(brevoScript);
+            
+            // Fallback: Show form after short delay if CSS didn't trigger
+            setTimeout(() => {
+                const brevoForm = document.querySelector('.sib-form');
+                if (brevoForm && !brevoForm.classList.contains('styles-loaded')) {
+                    brevoForm.classList.add('styles-loaded');
+                }
+            }, 500);
             
             // Initialize form visibility 
             const errorMessage = document.getElementById('error-message');
