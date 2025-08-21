@@ -749,8 +749,11 @@
                               </div>
                             </div>
                             <div></div>
+                            <!-- Hidden iframe for form submission -->
+                            <iframe name="hidden-brevo-frame" style="display: none;"></iframe>
+                            
                             <div id="sib-container" class="sib-container--large sib-container--vertical" style="text-align:center; background-color:rgba(255,255,255,1); max-width:540px; border-radius:3px; border-width:1px; border-color:#C0CCD9; border-style:solid; direction:ltr">
-                              <form id="sib-form" method="POST" action="https://e6a0e3af.sibforms.com/serve/MUIFAMXoC7yiwyQ-TcusPa3JdrWsSPLmg7ruYff0YPGFytEHmwSQ9zW6Z5n-5Phq01At9bgUxsc5WFi8AsFctnQVHg6Eu55OSSvhGvG3EFF3xB51fNgHQ-r-zarDzNDv3v2RauzALN0CCzueSWcNSQA22ghH7kRO-1Db1hxOVJkfEiqZK-rqNsf7tlm2GLla678BejmJexr1TH7x" data-type="subscription">
+                              <form id="sib-form" method="POST" action="https://e6a0e3af.sibforms.com/serve/MUIFAMXoC7yiwyQ-TcusPa3JdrWsSPLmg7ruYff0YPGFytEHmwSQ9zW6Z5n-5Phq01At9bgUxsc5WFi8AsFctnQVHg6Eu55OSSvhGvG3EFF3xB51fNgHQ-r-zarDzNDv3v2RauzALN0CCzueSWcNSQA22ghH7kRO-1Db1hxOVJkfEiqZK-rqNsf7tlm2GLla678BejmJexr1TH7x" data-type="subscription" target="hidden-brevo-frame">
                                 <div style="padding: 8px 0;">
                                   <div class="sib-input sib-form-block">
                                     <div class="form__entry entry_block">
@@ -1279,58 +1282,31 @@
     <script src="https://www.google.com/recaptcha/api.js?render=6LfX-YIrAAAAANee0xq8DpIkuP8rARI8u6a6y8o6&hl=en" async defer></script>
     
     <script>
-        // Override form submission to prevent redirect but allow Brevo processing
+        // Simple success message handler - let Brevo do everything else
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('sib-form');
             const successMessage = document.getElementById('success-message');
-            const errorMessage = document.getElementById('error-message');
             const formContainer = document.getElementById('sib-container');
             
-            // Let Brevo script load and initialize first
-            setTimeout(() => {
-                if (form) {
-                    // Intercept form submission after Brevo initializes
-                    form.addEventListener('submit', function(e) {
-                        e.preventDefault();
+            if (form) {
+                form.addEventListener('submit', function() {
+                    // Show success message after form submits
+                    setTimeout(() => {
+                        if (formContainer) formContainer.style.display = 'none';
+                        if (successMessage) {
+                            successMessage.style.display = 'block';
+                            successMessage.scrollIntoView({ behavior: 'smooth' });
+                        }
                         
-                        // Create hidden iframe for submission
-                        const iframe = document.createElement('iframe');
-                        iframe.style.display = 'none';
-                        iframe.name = 'brevo-hidden-submit';
-                        document.body.appendChild(iframe);
-                        
-                        // Set form target to iframe and submit
-                        const originalTarget = form.target;
-                        form.target = 'brevo-hidden-submit';
-                        
-                        // Allow the actual form submission to Brevo
-                        form.removeEventListener('submit', arguments.callee);
-                        form.submit();
-                        
-                        // Show success message after short delay
-                        setTimeout(() => {
-                            if (formContainer) formContainer.style.display = 'none';
-                            if (errorMessage) errorMessage.style.display = 'none';
-                            if (successMessage) {
-                                successMessage.style.display = 'block';
-                                successMessage.scrollIntoView({ behavior: 'smooth' });
-                            }
-                            
-                            // Clean up
-                            document.body.removeChild(iframe);
-                            form.target = originalTarget;
-                            form.reset();
-                            
-                            // Track success
-                            if (window.gtag) {
-                                window.gtag('event', 'form_submit_success', {
-                                    event_category: 'waitlist_form'
-                                });
-                            }
-                        }, 1500);
-                    });
-                }
-            }, 1000); // Wait for Brevo script to initialize
+                        // Track success
+                        if (window.gtag) {
+                            window.gtag('event', 'form_submit_success', {
+                                event_category: 'waitlist_form'
+                            });
+                        }
+                    }, 2000);
+                });
+            }
         });
     </script>
 </body>
