@@ -297,16 +297,55 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Fix FOUC by ensuring proper sizing from start */
+        /* Prevent FOUC with immediate styling */
         .sib-form {
-            visibility: hidden !important;
+            max-width: 540px !important;
+            margin: 0 auto !important;
+            background: #EFF2F7 !important;
+            border-radius: 12px !important;
+            padding: 20px !important;
         }
         
-        .sib-form.styles-loaded {
-            visibility: visible !important;
+        .sib-form-container {
+            max-width: 540px !important;
+            margin: 0 auto !important;
+        }
+        
+        .sib-form-message-panel {
+            display: none !important;
+            max-width: 500px !important;
+            margin: 0 auto 16px auto !important;
+            padding: 16px !important;
+            border-radius: 8px !important;
+            font-size: 14px !important;
+        }
+        
+        .sib-form-message-panel .sib-icon {
+            width: 20px !important;
+            height: 20px !important;
+            flex-shrink: 0 !important;
+        }
+        
+        #sib-container {
+            max-width: 500px !important;
+            margin: 0 auto !important;
+            background: white !important;
+            border: 1px solid #C0CCD9 !important;
+            border-radius: 8px !important;
+            padding: 20px !important;
+        }
+        
+        .sib-form .input {
+            width: 100% !important;
+            padding: 12px !important;
+            border: 2px solid #C0CCD9 !important;
+            border-radius: 6px !important;
+            font-size: 16px !important;
+            margin-bottom: 16px !important;
+            box-sizing: border-box !important;
         }
     </style>
-    <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css" onload="if(document.querySelector('.sib-form')){document.querySelector('.sib-form').classList.add('styles-loaded');}">
+    <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
     
     <!-- Preload critical resources -->
     <link rel="preload" href="assets/inter-fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -1351,21 +1390,12 @@
     
     <!-- Load Brevo form script after reCAPTCHA -->
     <script>
-        // Ensure proper loading order
+        // Load Brevo form script
         document.addEventListener('DOMContentLoaded', function() {
-            // Create and load the Brevo script
             const brevoScript = document.createElement('script');
             brevoScript.src = 'https://sibforms.com/forms/end-form/build/main.js';
             brevoScript.defer = true;
             document.head.appendChild(brevoScript);
-            
-            // Fallback: Show form after short delay if CSS didn't trigger
-            setTimeout(() => {
-                const brevoForm = document.querySelector('.sib-form');
-                if (brevoForm && !brevoForm.classList.contains('styles-loaded')) {
-                    brevoForm.classList.add('styles-loaded');
-                }
-            }, 500);
             
             // Initialize form visibility 
             const errorMessage = document.getElementById('error-message');
