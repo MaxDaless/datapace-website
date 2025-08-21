@@ -1,17 +1,58 @@
+# Robots.txt for Datapace.ai - AI Database Performance Optimization
+# Updated: 2025-08-21
+
+# Main crawler directives
 User-agent: *
 Allow: /
 
-# Important pages
+# Priority pages for crawling
 Allow: /blog/
 Allow: /career/
+Allow: /sitemap.xml
+Allow: /robots.txt
 
-# Block sensitive areas
-Disallow: /assets/
+# Block non-essential resources to save crawl budget
+Disallow: /assets/fonts/
+Disallow: /assets/*.ttf
+Disallow: /assets/*.woff*
 Disallow: /.vercel/
-Disallow: /careers/
+Disallow: /.git/
+Disallow: /careers/supabase-schema.sql
+Disallow: /careers/careers.css
+
+# Allow important assets for indexing
+Allow: /assets/logo.png
+Allow: /assets/og-image.jpg
+Allow: /assets/*icon*.png
+Allow: /assets/site.webmanifest
+
+# Search engine specific rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0.5
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Social media bots
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Block aggressive bots
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
 
 # Sitemaps
 Sitemap: https://www.datapace.ai/sitemap.xml
 
-# Crawl-delay for politeness
-Crawl-delay: 1
+# Last updated: 2025-08-21
