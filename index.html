@@ -1275,132 +1275,62 @@
         var AUTOHIDE = Boolean(0);
     </script>
     
+    <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
     <script src="https://www.google.com/recaptcha/api.js?render=6LfX-YIrAAAAANee0xq8DpIkuP8rARI8u6a6y8o6&hl=en" async defer></script>
     
     <script>
+        // Override form submission to prevent redirect but allow Brevo processing
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('sib-form');
-            const submitButton = form.querySelector('.sib-form-block__button');
-            const buttonText = submitButton.querySelector('.button-text');
-            const loadingIcon = submitButton.querySelector('.progress-indicator__icon');
             const successMessage = document.getElementById('success-message');
             const errorMessage = document.getElementById('error-message');
             const formContainer = document.getElementById('sib-container');
             
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Show loading state
-                submitButton.disabled = true;
-                if (buttonText) buttonText.style.display = 'none';
-                if (loadingIcon) {
-                    loadingIcon.style.display = 'block';
-                    loadingIcon.classList.remove('sib-hide-loader-icon');
-                }
-                
-                // Hide any existing messages
-                if (successMessage) successMessage.style.display = 'none';
-                if (errorMessage) errorMessage.style.display = 'none';
-                
-                // Get form data
-                const formData = new FormData(form);
-                
-                // Add reCAPTCHA token if available
-                if (window.grecaptcha && window.grecaptcha.ready) {
-                    window.grecaptcha.ready(function() {
-                        window.grecaptcha.execute('6LfX-YIrAAAAANee0xq8DpIkuP8rARI8u6a6y8o6', {action: 'submit'}).then(function(token) {
-                            formData.set('g-recaptcha-response', token);
-                            submitFormData(formData);
-                        });
-                    });
-                } else {
-                    submitFormData(formData);
-                }
-                
-                function submitFormData(data) {
-                    // Use hidden iframe submission to ensure data reaches Brevo
-                    const iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.name = 'brevo-submit-' + Date.now();
-                    document.body.appendChild(iframe);
-                    
-                    // Clone the original form and target it to iframe
-                    const tempForm = form.cloneNode(true);
-                    tempForm.target = iframe.name;
-                    tempForm.style.display = 'none';
-                    tempForm.id = 'temp-form-' + Date.now();
-                    
-                    // Update form data with reCAPTCHA if available
-                    if (data.has('g-recaptcha-response')) {
-                        let recaptchaInput = tempForm.querySelector('input[name="g-recaptcha-response"]');
-                        if (!recaptchaInput) {
-                            recaptchaInput = document.createElement('input');
-                            recaptchaInput.type = 'hidden';
-                            recaptchaInput.name = 'g-recaptcha-response';
-                            tempForm.appendChild(recaptchaInput);
-                        }
-                        recaptchaInput.value = data.get('g-recaptcha-response');
-                    }
-                    
-                    document.body.appendChild(tempForm);
-                    
-                    // Submit the form to iframe
-                    tempForm.submit();
-                    
-                    // Clean up and show success after delay
-                    setTimeout(() => {
-                        try {
-                            document.body.removeChild(tempForm);
+            // Let Brevo script load and initialize first
+            setTimeout(() => {
+                if (form) {
+                    // Intercept form submission after Brevo initializes
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        // Create hidden iframe for submission
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.name = 'brevo-hidden-submit';
+                        document.body.appendChild(iframe);
+                        
+                        // Set form target to iframe and submit
+                        const originalTarget = form.target;
+                        form.target = 'brevo-hidden-submit';
+                        
+                        // Allow the actual form submission to Brevo
+                        form.removeEventListener('submit', arguments.callee);
+                        form.submit();
+                        
+                        // Show success message after short delay
+                        setTimeout(() => {
+                            if (formContainer) formContainer.style.display = 'none';
+                            if (errorMessage) errorMessage.style.display = 'none';
+                            if (successMessage) {
+                                successMessage.style.display = 'block';
+                                successMessage.scrollIntoView({ behavior: 'smooth' });
+                            }
+                            
+                            // Clean up
                             document.body.removeChild(iframe);
-                        } catch (e) {
-                            console.log('Cleanup already done');
-                        }
-                        showSuccess();
-                    }, 2000);
-                }
-                
-                function showSuccess() {
-                    // Hide form
-                    if (formContainer) formContainer.style.display = 'none';
-                    
-                    // Show success message
-                    if (successMessage) {
-                        successMessage.style.display = 'block';
-                        successMessage.scrollIntoView({ behavior: 'smooth' });
-                    }
-                    
-                    // Reset form
-                    form.reset();
-                    
-                    // Track event
-                    if (window.gtag) {
-                        window.gtag('event', 'form_submit_success', {
-                            event_category: 'waitlist_form'
-                        });
-                    }
-                    
-                    // Restore button (hidden anyway)
-                    restoreButton();
-                }
-                
-                function restoreButton() {
-                    submitButton.disabled = false;
-                    if (buttonText) buttonText.style.display = 'inline';
-                    if (loadingIcon) {
-                        loadingIcon.style.display = 'none';
-                        loadingIcon.classList.add('sib-hide-loader-icon');
-                    }
-                }
-            });
-            
-            // Track form interaction
-            form.addEventListener('focusin', function() {
-                if (window.gtag) {
-                    window.gtag('event', 'form_start', {
-                        event_category: 'waitlist_form'
+                            form.target = originalTarget;
+                            form.reset();
+                            
+                            // Track success
+                            if (window.gtag) {
+                                window.gtag('event', 'form_submit_success', {
+                                    event_category: 'waitlist_form'
+                                });
+                            }
+                        }, 1500);
                     });
                 }
-            }, { once: true });
+            }, 1000); // Wait for Brevo script to initialize
         });
     </script>
 </body>
