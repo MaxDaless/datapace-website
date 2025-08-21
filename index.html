@@ -1253,7 +1253,7 @@
     <!-- Blog JavaScript -->
     <script src="blog.js"></script>
     
-    <!-- Brevo Form JavaScript (EXACT COPY from working version) -->
+    <!-- Brevo Form JavaScript with AJAX submission -->
     <script>
         window.REQUIRED_CODE_ERROR_MESSAGE = 'Please choose a country code';
         window.LOCALE = 'en';
@@ -1271,7 +1271,134 @@
         var AUTOHIDE = Boolean(0);
     </script>
     
-    <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
     <script src="https://www.google.com/recaptcha/api.js?render=6LfX-YIrAAAAANee0xq8DpIkuP8rARI8u6a6y8o6&hl=en" async defer></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('sib-form');
+            const submitButton = form.querySelector('.sib-form-block__button');
+            const buttonText = submitButton.querySelector('.button-text');
+            const loadingIcon = submitButton.querySelector('.progress-indicator__icon');
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+            const formContainer = document.getElementById('sib-container');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                submitButton.disabled = true;
+                if (buttonText) buttonText.style.display = 'none';
+                if (loadingIcon) {
+                    loadingIcon.style.display = 'block';
+                    loadingIcon.classList.remove('sib-hide-loader-icon');
+                }
+                
+                // Hide any existing messages
+                if (successMessage) successMessage.style.display = 'none';
+                if (errorMessage) errorMessage.style.display = 'none';
+                
+                // Get form data
+                const formData = new FormData(form);
+                
+                // Add reCAPTCHA token if available
+                if (window.grecaptcha && window.grecaptcha.ready) {
+                    window.grecaptcha.ready(function() {
+                        window.grecaptcha.execute('6LfX-YIrAAAAANee0xq8DpIkuP8rARI8u6a6y8o6', {action: 'submit'}).then(function(token) {
+                            formData.set('g-recaptcha-response', token);
+                            submitFormData(formData);
+                        });
+                    });
+                } else {
+                    submitFormData(formData);
+                }
+                
+                function submitFormData(data) {
+                    // Try AJAX submission first
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: data,
+                        mode: 'no-cors'
+                    }).then(() => {
+                        // Show success message
+                        showSuccess();
+                    }).catch(() => {
+                        // Fallback: hidden iframe submission
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.name = 'brevo-submit-' + Date.now();
+                        document.body.appendChild(iframe);
+                        
+                        const tempForm = document.createElement('form');
+                        tempForm.method = 'POST';
+                        tempForm.action = form.action;
+                        tempForm.target = iframe.name;
+                        tempForm.style.display = 'none';
+                        
+                        // Add form data
+                        for (let [key, value] of data.entries()) {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = key;
+                            input.value = value;
+                            tempForm.appendChild(input);
+                        }
+                        
+                        document.body.appendChild(tempForm);
+                        tempForm.submit();
+                        
+                        // Clean up and show success after delay
+                        setTimeout(() => {
+                            document.body.removeChild(tempForm);
+                            document.body.removeChild(iframe);
+                            showSuccess();
+                        }, 2000);
+                    });
+                }
+                
+                function showSuccess() {
+                    // Hide form
+                    if (formContainer) formContainer.style.display = 'none';
+                    
+                    // Show success message
+                    if (successMessage) {
+                        successMessage.style.display = 'block';
+                        successMessage.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    
+                    // Reset form
+                    form.reset();
+                    
+                    // Track event
+                    if (window.gtag) {
+                        window.gtag('event', 'form_submit_success', {
+                            event_category: 'waitlist_form'
+                        });
+                    }
+                    
+                    // Restore button (hidden anyway)
+                    restoreButton();
+                }
+                
+                function restoreButton() {
+                    submitButton.disabled = false;
+                    if (buttonText) buttonText.style.display = 'inline';
+                    if (loadingIcon) {
+                        loadingIcon.style.display = 'none';
+                        loadingIcon.classList.add('sib-hide-loader-icon');
+                    }
+                }
+            });
+            
+            // Track form interaction
+            form.addEventListener('focusin', function() {
+                if (window.gtag) {
+                    window.gtag('event', 'form_start', {
+                        event_category: 'waitlist_form'
+                    });
+                }
+            }, { once: true });
+        });
+    </script>
 </body>
 </html>
