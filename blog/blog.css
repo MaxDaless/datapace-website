@@ -90,8 +90,13 @@
 /* Main blog layout */
 .blog-main {
     min-height: 100vh;
-    background: #FAFAFA;
+    background: #FAFAFA !important;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+/* DEBUG: Test if CSS is loading */
+body {
+    border: 5px solid red !important;
 }
 
 /* Hero section - clean and minimal */
