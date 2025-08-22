@@ -1,0 +1,20 @@
+Contact: security@datapace.ai
+Expires: 2026-08-22T14:00:00.000Z
+Preferred-Languages: en
+Canonical: https://www.datapace.ai/.well-known/security.txt
+Policy: https://www.datapace.ai/security-policy
+Acknowledgments: https://www.datapace.ai/security-acknowledgments
+
+# Security Policy
+# 
+# We take security seriously at Datapace. If you discover any security 
+# vulnerabilities, please report them responsibly through the contact 
+# information above.
+#
+# Please include:
+# - Description of the vulnerability
+# - Steps to reproduce
+# - Potential impact
+# - Suggested fix (if available)
+#
+# We aim to respond to security reports within 72 hours.
