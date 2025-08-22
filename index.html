@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     
     <!-- Security Headers (GitHub Pages fallback) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google.com https://sibforms.com; style-src 'self' 'unsafe-inline' https://sibforms.com; font-src 'self'; img-src 'self' data:; connect-src 'self' https://srggfllxshgobksljwcn.supabase.co https://www.google-analytics.com https://e6a0e3af.sibforms.com; object-src 'none'; base-uri 'self'; form-action 'self' https://e6a0e3af.sibforms.com;"
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google.com https://sibforms.com; style-src 'self' 'unsafe-inline' https://sibforms.com; font-src 'self'; img-src 'self' data:; frame-src https://e6a0e3af.sibforms.com; connect-src 'self' https://srggfllxshgobksljwcn.supabase.co https://www.google-analytics.com https://e6a0e3af.sibforms.com; object-src 'none'; base-uri 'self'; form-action 'self' https://e6a0e3af.sibforms.com;"
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
@@ -130,7 +130,6 @@
     <!-- Load CSS directly and synchronously to prevent FOUC -->
     <link rel="stylesheet" href="assets/inter-fonts.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="blog/blog.css">
     <link rel="preload" href="assets/logo.png" as="image">
     
     <!-- Critical CSS inline for immediate styling -->
